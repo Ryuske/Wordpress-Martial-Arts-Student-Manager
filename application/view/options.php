@@ -84,20 +84,25 @@ global $ma_accounts;
     <!--Settings page-->
     <div id="settings" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
         <h1>Settings</h1>
-        <form id="update_options" name="update_options" action="" method="post">
-            <label>Page to display once logged in<label> <br />
-            <input id='quiz_length' name="quiz_manager_settings[quiz_length]" type="text" value="Students-LoggedIn" /> <br /><br />
+        <form id="update_settings" name="update_settings" action="options.php#settings" method="post">
+            <?php
+            settings_fields('ma_accounts_settings');
+            $settings = get_option('ma_accounts_settings');
+            wp_create_nonce('ma_accounts_nonce');
+            ?>
+            <label>Page to display once logged in</label> <br />
+            <input name="ma_accounts_settings[login_page]" type="text" value="<?php echo $settings['login_page']; ?>" /> <br /><br />
 
             <label>Remove Roles (separate with a comma)</label> <br />
-            <input style="width: 400px;" type="text" value="editor, author, contributor, subscriber" /> <br /><br />
+            <input style="width: 400px;" name="ma_accounts_settings[roles][remove]" type="text" value="<?php echo implode(', ', $settings['roles']['remove']); ?>" /> <br /><br />
 
-            <label>Add Roles (separate with a comma, currently available: student, promotor)</label> <br />
-            <input type="text" value="student, promotor" /> <br /><br />
+            <label>Add Roles (separate with a comma, currently available: student, promoter)</label> <br />
+            <input name="ma_accounts_settings[roles][add]" type="text" value="<?php echo implode(', ', $settings['roles']['add']); ?>" /> <br /><br />
 
             <label>Default Role</label> <br />
-            <input type="text" value="student" /> <br /><br />
+            <input name="ma_accounts_settings[roles][default]" type="text" value="<?php echo $settings['roles']['default']; ?>" /> <br /><br />
 
-            <input class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" type="submit" value="Save Changes" />
+            <input class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" type="submit" name="Submit" value="<?php _e('Save Changes'); ?>" />
         </form>
     </div>
 
