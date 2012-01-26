@@ -17,7 +17,8 @@ class ma_accounts {
         wp_enqueue_script('jquery-ui-tabs');
         wp_enqueue_script('jquery-ui-dialog');
         wp_register_style('black-tie', plugins_url('application/view/css/jquery-ui.css', __FILE__));
-        wp_register_script('maAccountManagerScript', plugins_url('application/view/js/admin.js', __FILE__));
+        wp_register_style('maAccountsStylesheet', plugins_url('application/view/css/ma_accounts.css', __FILE__));
+        wp_register_script('maAccountsScript', plugins_url('application/view/js/admin.js', __FILE__));
 
         add_action('admin_menu', array(&$this, 'add_admin_menu'));
         add_action('admin_init', array(&$this, 'admin_settings'));
@@ -80,7 +81,8 @@ class ma_accounts {
 
     public function render_backend() {
         wp_enqueue_style('black-tie');
-        wp_enqueue_script('maAccountManagerScript');
+        wp_enqueue_style('maAccountsStylesheet');
+        wp_enqueue_script('maAccountsScript');
         include dirname(__FILE__) . '/application/view/options.php';
     } //End render_backend
 

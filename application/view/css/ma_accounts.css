@@ -1,0 +1,10 @@
+.ma_accounts_table { border-collapse: collapse; width: 50%; }
+.ma_accounts_table th, .ma_accounts_table td { border: 1px solid maroon; height: 30px; text-align: center; }
+.ma_accounts_table tr { color: #FFF; background-color: gray; }
+.ma_accounts_table tr .icon { background-color: #F9F9F9; }
+.ma_accounts_table tr.alt { background-color: #000; }
+.ma_accounts_table tr:hover { background-color: #FFF; color: #000; }
+.ma_accounts_table td { vertical-align: middle; }
+
+.ma_accounts_label { font-weight: bold; padding: 5px; font-size: 15px; }
+.ma_accounts_notification { padding: 8px; }

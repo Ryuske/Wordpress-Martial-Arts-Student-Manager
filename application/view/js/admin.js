@@ -5,15 +5,14 @@ jQuery(document).ready(function(){
     })
 });
 
-jQuery('#add').dialog({
+jQuery('#update_account').dialog({
     autoOpen: false,
-    height: 350,
     width: 350,
     modal: true,
     resizable: false,
     draggable: false,
     buttons: {
-        "Add Question": function() {
+        "Edit": function() {
             var fail = false;
             for (var i=0; i < jQuery('#add_question input').length; i++) {
                 if (jQuery('#add_question input').eq(i).val() == '') {

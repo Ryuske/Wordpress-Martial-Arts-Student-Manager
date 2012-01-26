@@ -25,6 +25,22 @@ global $ma_accounts;
     </ul>
     <div id="accounts" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
         <h1>Accounts</h1>
+        <table class="ma_accounts_table">
+            <tbody>
+                <tr>
+                    <td class="icon"><a href="#" onclick="jQuery('#update_account').dialog('open');"><span class="ui-icon ui-icon-pencil" style="position: relative; margin: 0 auto;"></span></a></td>
+                    <td>Sensei Ryan</td>
+                    <td>5th Degree Black</td>
+                    <td>Swat, NLC</td>
+                </td>
+                <tr class="alt">
+                    <td class="icon"><span class="ui-icon ui-icon-pencil" style="position: relative; margin: 0 auto;"></span></td>
+                    <td>Kenyon Haliwell</td>
+                    <td>2nd Brown</td>
+                    <td>NLC</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div id="belts_programs" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
         <h1>Belts &amp; VIP Programs</h1>
@@ -40,35 +56,26 @@ global $ma_accounts;
         <h1>Help</h1>
         <p>Eventually, I'll add this.</p>
     </div>
-    <div id="add" title="Add Question" style="text-align: center;">
-        <form id="add_question" action="" method="post">
-            <input name="type" type="hidden" value="add" />
-            <label>Question</label> <br />
-            <input style="width: 265px;" name="question" type="text" maxlength="150" /> <br /><br />
-            <table style="margin: 0 auto;">
+    <div id="update_account" title="Edit Account">
+        <h2 style="text-align: center">Sensei Ryan</h2>
+        <form id="edit_account" action="" method="post">
+            <input name="type" type="hidden" value="ma_accounts[edit_student]" />
+            <label class="ma_accounts_label">Belt</label>
+            <span><select name="belt"><option value="white">White</option></select></span> <br /><br />
+            <label class="ma_accounts_label">VIP Programs</label> <br />
+            <table>
                 <tbody>
                     <tr>
-                        <td>Answer A</td>
-                        <td><input name="answer[a]" type="text" /></td>
-                        <td><input name="answer[answer]" type="radio" value="a" /></td>
+                        <td>SWAT</td>
+                        <td><input type="checkbox" value="swat" /></td>
                     </tr>
                     <tr>
-                        <td>Answer B</td>
-                        <td><input name="answer[b]" type="text" /></td>
-                        <td><input name="answer[answer]" type="radio" value="b" /></td>
-                    </tr>
-                        <td>Answer C</td>
-                        <td><input name="answer[c]" type="text" /></td>
-                        <td><input name="answer[answer]" type="radio" value="c" /></td>
-                    <tr>
-                        <td>Answer D</td>
-                        <td><input name="answer[d]" type="text" /></td>
-                        <td><input name="answer[answer]" type="radio" value="d" /></td>
+                        <td>NLC</td>
+                        <td><input type="checkbox" value="nlc" /></td>
                     </tr>
                 </tbody>
             </table>
         </form>
-        <div id="add_tips">All form fields are required!</div>
     </div>
     <?php
     if (is_numeric($_GET['id']) && $_GET['action'] === 'update') {
@@ -110,8 +117,8 @@ global $ma_accounts;
                     </tbody>
                 </table>
             </form>
-            <div id="edit_tips">All form fields are required!</div>
-            <?php
+            <div id="update_account_notification" class="ui-state-highlight ui-corner-all ma_accounts_notification"><span class="ui-icon ui-icon-info" style="float: left;"></span>&nbsp;All form fields are required!</div>
+        <?php
         } else {
             ?>
             <script type="text/javascript">jQuery(document).ready(function(){jQuery('#edit').dialog('close');});</script>
