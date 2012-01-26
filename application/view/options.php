@@ -44,6 +44,36 @@ global $ma_accounts;
     </div>
     <div id="belts_programs" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
         <h1>Belts &amp; VIP Programs</h1>
+        <h3 style="display: inline;">Belts</h3> <h5 style="display: inline; position: relative; bottom: 1px;"><a href="#belts_programs" onclick="jQuery('#add_belt').dialog('open')"><span class="ui-icon ui-icon-plusthick" style="display: inline-block; vertical-align: top;"></span>Add</a></h5>
+        <div id="sortable_trash" style="width: 120px;">
+            <div style="float: left;">
+                <div class="ma_accounts_ul_trash"><a href="plugins.php?page=ma_accounts&id=white&action=delete_belt#belts_programs"><span class="ui-icon ui-icon-trash"></span></a></div>
+                <div class="ma_accounts_ul_trash"><a href="plugins.php?page=ma_accounts&id=green&action=delete_belt#belts_programs"><span class="ui-icon ui-icon-trash"></span></a></div>
+                <div class="ma_accounts_ul_trash"><a href="plugins.php?page=ma_accounts&id=black&action=delete_belt#belts_programs"><span class="ui-icon ui-icon-trash"></span></a></div>
+            </div>
+            <div style="float: right;">
+                <ul id="sortable" class="ma_accounts_ul">
+                    <li id="white" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s" style="float: left;"></span>White</li>
+                    <li id="green" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s" style="float: left;"></span>Green</li>
+                    <li id="black" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s" style="float: left;"></span>Black</li>
+                <ul>
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+        <br />
+        <h3 style="display: inline;">VIP Programs</h3> <h5 style="display: inline; position: relative; bottom: 1px;"><a href="#belts_programs" onclick="jQuery('#add_program').dialog('open')"><span class="ui-icon ui-icon-plusthick" style="display: inline-block; vertical-align: top;"></span>Add</a></h5>
+        <table>
+            <tbody>
+                <tr>
+                    <td><a href="plugins.php?page=ma_accounts&id=swat&action=delete_program#belts_programs"><span class="ui-icon ui-icon-trash" style="padding: 2px 0;"></span></a></td>
+                    <td>Swat</td>
+                </tr>
+                <tr>
+                    <td><a href="plugins.php?page=ma_accounts&id=nlc&action=delete_program#belts_programs"><span class="ui-icon ui-icon-trash" style="padding: 2px 0;"></span></a></td>
+                    <td>NLC</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div id="settings" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
         <h1>Settings</h1>
@@ -56,6 +86,8 @@ global $ma_accounts;
         <h1>Help</h1>
         <p>Eventually, I'll add this.</p>
     </div>
+
+    <!--Start dialog HTML-->
     <div id="update_account" title="Edit Account">
         <h2 style="text-align: center">Sensei Ryan</h2>
         <form id="edit_account" action="" method="post">
@@ -77,6 +109,7 @@ global $ma_accounts;
             </table>
         </form>
     </div>
+
     <?php
     if (is_numeric($_GET['id']) && $_GET['action'] === 'update') {
         ?>
@@ -126,26 +159,54 @@ global $ma_accounts;
         }
         ?>
     </div>
+
+    <!--Dialog HTML for Belts and Special Programs-->
+    <div id="add_belt" title="Add Belt">
+        <form id="add_belt_form" action="" method="post">
+            <input name="type" type="hidden" value="ma_accounts[add_belt]" />
+            <label class="ma_accounts_label">Title</label> <br />
+            <input name="belt" type="text" />
+        </form>
+    </div>
+
+   <div id="add_program" title="Add Program">
+        <form id="add_program_form" action="" method="post">
+            <input name="type" type="hidden" value="ma_accounts[add_program]" />
+            <label class="ma_accounts_label">Title</label> <br />
+            <input name="program" type="text" />
+        </form>
+    </div>
+
+
     <?php
-    if (is_numeric($_GET['id']) && $_GET['action'] === 'delete') {
+    if (/*is_numeric($_GET['id']) && */$_GET['action'] === 'delete_belt') {
         ?>
-        <script type="text/javascript">jQuery(document).ready(function(){jQuery('#delete').dialog('open')});</script>
+        <script type="text/javascript">jQuery(document).ready(function(){jQuery('#delete_belt').dialog('open')});</script>
         <?php
     }
     ?>
-    <div id="delete" title="Delete Question" style="text-align: center;">
-        <?php
-        if ($_GET['id'] <= count($quiz_manager->questions) && $_GET['id'] > 0 && $_GET['action'] === 'delete') {
-            $id = $_GET['id'];
-            ?>
-            Are you sure you want to delete the question: <br />
-            <?php esc_html_e($quiz_manager->questions[$id]['question']); ?>
-            <form id="delete_question" action="plugins.php?page=quiz_manager" method="post">
-                <input name="type" type="hidden" value="delete" />
-                <input name="id" type="hidden" value="<?php echo $quiz_manager->questions[$id]['id']; ?>" />
-            </form>
-            <?php
-        }
+    <div id="delete_belt" title="Delete Belt" style="text-align: center;">
+        Are you sure you want to delete the belt: <br />
+        Black
+        <form id="delete_question" action="plugins.php?page=quiz_manager" method="post">
+            <input name="type" type="hidden" value="delete" />
+            <input name="id" type="hidden" value="koala" />
+        </form>
+    </div>
+
+    <?php
+    if (/*is_numeric($_GET['id']) && */$_GET['action'] === 'delete_program') {
         ?>
+        <script type="text/javascript">jQuery(document).ready(function(){jQuery('#delete_program').dialog('open')});</script>
+        <?php
+    }
+    ?>
+    <div id="delete_program" title="Delete Program" style="text-align: center;">
+        Are you sure you want to delete the program: <br />
+        Swat
+        <form id="delete_question" action="plugins.php?page=quiz_manager" method="post">
+            <input name="type" type="hidden" value="delete" />
+            <input name="id" type="hidden" value="koala" />
+        </form>
     </div>
 </div>
