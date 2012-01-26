@@ -1,5 +1,6 @@
 <?php
 function ma_accounts_profile_html($user) {
+    /*
     ?>
     <script type="text/javascript">
         jQuery(document).ready(function() {
@@ -15,6 +16,9 @@ function ma_accounts_profile_html($user) {
             //Hide fields with this. Also need to make this an option in the admin section (i.e. turn on/off)
         });
     </script>
+     * Add this in some future version, maybe
+     */
+    ?>
     <h3>Rank Information<h3>
     <table class="form-table">
         <tbody>
@@ -33,6 +37,7 @@ function ma_accounts_profile_html($user) {
 
 function ma_accounts_edit_profile_html($user) {
     if ('administrator' !== wp_get_current_user()->roles[0]) {
+        /*
         ?>
         <script type="text/javascript">
         jQuery(document).ready(function() {
@@ -47,7 +52,8 @@ function ma_accounts_edit_profile_html($user) {
             jQuery('table').eq(5).html('');
         });
         </script>
-        <?php
+         * Add this in some future version, maybe
+         */
     }
     ?>
     <h3>Rank Information<h3>

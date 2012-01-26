@@ -1,5 +1,11 @@
+/*
+ * Variable defintions
+ */
 var ma_accounts = {'sortable_original_order': null, 'ul_order': Array()};
 
+/*
+ * Add tabs for navigation
+ */
 jQuery(document).ready(function(){
     jQuery('#option-tabs').tabs();
     jQuery("#option-tabs").bind("tabsshow", function(event, ui) { 
@@ -7,6 +13,9 @@ jQuery(document).ready(function(){
     })
 });
 
+/*
+ * Add sortable content, used on Belts & Programs to make belts sortable.
+ */
 jQuery('#sortable').sortable({
     placeholder: 'ui-state-highlight ma_accounts_sortable_placeholder',
     update: function(browserEvent, item) {
@@ -28,11 +37,15 @@ jQuery('#sortable').sortable({
     }
 });
 jQuery('#sortable').disableSelection();
+
 ma_accounts.sortable_original_order = jQuery('#sortable').sortable('toArray');
 for (var i=0; i<ma_accounts.sortable_original_order.length; i++) {
     ma_accounts.ul_order.push(jQuery('#sortable_trash div').children().eq(i).html());
 }
 
+/*
+ * Begin adding dialogs for jQuery UI
+ */
 jQuery('#update_account').dialog({
     autoOpen: false,
     width: 350,
@@ -57,34 +70,7 @@ jQuery('#update_account').dialog({
             jQuery(this).dialog('close');
         }
     }
-});
-
-jQuery('#update').dialog({
-    autoOpen: false,
-    height: 350,
-    width: 350,
-    modal: true,
-    resizable: false,
-    draggable: false,
-    buttons: {
-        "Update Question": function() {
-            var fail = false;
-            for (var i=0; i < jQuery('#update_question input').length; i++) {
-                if (jQuery('#update_question input').eq(i).val() == '') {
-                    fail = true;
-                }
-            }
-            if (!fail) {
-                jQuery('#update_question').submit();
-            } else {
-                jQuery('#edit_tips').css('color', 'red');
-            }
-        },
-        Cancel: function() {
-            window.location = 'plugins.php?page=quiz_manager';
-        }
-    }
-});
+}); //End #update_account
 
 jQuery('#add_belt').dialog({
     autoOpen: false,
@@ -110,7 +96,7 @@ jQuery('#add_belt').dialog({
             jQuery(this).dialog('close');
         }
     }
-});
+}); //End #add_belt
 
 jQuery('#add_program').dialog({
     autoOpen: false,
@@ -136,7 +122,7 @@ jQuery('#add_program').dialog({
             jQuery(this).dialog('close');
         }
     }
-});
+}); //End #add_program
 
 
 jQuery('#delete_belt').dialog({
@@ -154,7 +140,7 @@ jQuery('#delete_belt').dialog({
                  window.location = 'plugins.php?page=ma_accounts#belts_programs';
             }
         }
-});
+}); //End #delete_belt
 
 jQuery('#delete_program').dialog({
         autoOpen: false,
@@ -171,4 +157,4 @@ jQuery('#delete_program').dialog({
                  window.location = 'plugins.php?page=ma_accounts#belts_programs';
             }
         }
-});
+}); //End #delete_program

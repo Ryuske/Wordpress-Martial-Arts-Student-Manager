@@ -23,6 +23,9 @@ global $ma_accounts;
         </li>
         <li class="ui-state-default ui-corner-top"><a href="#help">Help</a></li>
     </ul>
+    <!--End Navigation-->
+
+    <!--Accounts page-->
     <div id="accounts" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
         <h1>Accounts</h1>
         <table class="ma_accounts_table">
@@ -42,6 +45,8 @@ global $ma_accounts;
             </tbody>
         </table>
     </div>
+
+    <!--Belts and Programs page-->
     <div id="belts_programs" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
         <h1>Belts &amp; VIP Programs</h1>
         <h3 style="display: inline;">Belts</h3> <h5 style="display: inline; position: relative; bottom: 1px;"><a href="#belts_programs" onclick="jQuery('#add_belt').dialog('open')"><span class="ui-icon ui-icon-plusthick" style="display: inline-block; vertical-align: top;"></span>Add</a></h5>
@@ -75,13 +80,28 @@ global $ma_accounts;
             </tbody>
         </table>
     </div>
+
+    <!--Settings page-->
     <div id="settings" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
         <h1>Settings</h1>
         <form id="update_options" name="update_options" action="" method="post">
-            Temp <input id='quiz_length' name="quiz_manager_settings[quiz_length]" type="text" value="<?php echo $settings['quiz_length']; ?>" /> <br />
+            <label>Page to display once logged in<label> <br />
+            <input id='quiz_length' name="quiz_manager_settings[quiz_length]" type="text" value="Students-LoggedIn" /> <br /><br />
+
+            <label>Remove Roles (separate with a comma)</label> <br />
+            <input style="width: 400px;" type="text" value="editor, author, contributor, subscriber" /> <br /><br />
+
+            <label>Add Roles (separate with a comma, currently available: student, promotor)</label> <br />
+            <input type="text" value="student, promotor" /> <br /><br />
+
+            <label>Default Role</label> <br />
+            <input type="text" value="student" /> <br /><br />
+
             <input class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" type="submit" value="Save Changes" />
         </form>
     </div>
+
+    <!--Help page-->
     <div id="help" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
         <h1>Help</h1>
         <p>Eventually, I'll add this.</p>
@@ -108,56 +128,6 @@ global $ma_accounts;
                 </tbody>
             </table>
         </form>
-    </div>
-
-    <?php
-    if (is_numeric($_GET['id']) && $_GET['action'] === 'update') {
-        ?>
-        <script type="text/javascript">jQuery(document).ready(function(){jQuery('#edit').dialog('open');});</script>
-        <?php
-    }
-    ?>
-    <div id="update" title="Edit Question" style="text-align: center;">
-        <?php
-        if ($_GET['id'] <= count($quiz_manager->questions) && $_GET['id'] > 0 && $_GET['action'] === 'update') {
-            $id = $_GET['id'];
-            ?>
-            <form id="update_question" action="plugins.php?page=quiz_manager" method="post">
-                <input name="type" type="hidden" value="update" />
-                <input name="id" type="hidden" value="<?php echo $id; ?>" />
-                <label>Question</label> <br />
-                <input style="width: 265px;" name="question" type="text" maxlength="150" value="<?php esc_html_e($quiz_manager->questions[$id]['question']); ?>" /> <br /><br />
-                <table style="margin: 0 auto;">
-                    <tbody>
-                        <tr>
-                            <td>Answer A</td>
-                            <td><input name="answer[a]" type="text" value="<?php esc_html_e($quiz_manager->questions[$id]['answers']['a']); ?>" /></td>
-                            <td><input name="answer[answer]" type="radio" value="a" <?php echo ($quiz_manager->questions[$id]['answers']['answer'] === 'a') ? 'checked="checked"' : ''; ?> /></td>
-                        </tr>
-                        <tr>
-                            <td>Answer B</td>
-                            <td><input name="answer[b]" type="text" value="<?php esc_html_e($quiz_manager->questions[$id]['answers']['b']); ?>" /></td>
-                            <td><input name="answer[answer]" type="radio" value="b" <?php echo ($quiz_manager->questions[$id]['answers']['answer'] === 'b') ? 'checked="checked"' : ''; ?> /></td>
-                        </tr>
-                            <td>Answer C</td>
-                            <td><input name="answer[c]" type="text" value="<?php esc_html_e($quiz_manager->questions[$id]['answers']['c']); ?>" /></td>
-                            <td><input name="answer[answer]" type="radio" value="c" <?php echo ($quiz_manager->questions[$id]['answers']['answer'] === 'c') ? 'checked="checked"' : ''; ?> /></td>
-                        <tr>
-                            <td>Answer D</td>
-                            <td><input name="answer[d]" type="text" value="<?php esc_html_e($quiz_manager->questions[$id]['answers']['d']); ?>" /></td>
-                            <td><input name="answer[answer]" type="radio" value="d" <?php echo ($quiz_manager->questions[$id]['answers']['answer'] === 'd') ? 'checked="checked"' : ''; ?> /></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </form>
-            <div id="update_account_notification" class="ui-state-highlight ui-corner-all ma_accounts_notification"><span class="ui-icon ui-icon-info" style="float: left;"></span>&nbsp;All form fields are required!</div>
-        <?php
-        } else {
-            ?>
-            <script type="text/javascript">jQuery(document).ready(function(){jQuery('#edit').dialog('close');});</script>
-            <?php
-        }
-        ?>
     </div>
 
     <!--Dialog HTML for Belts and Special Programs-->
