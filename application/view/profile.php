@@ -23,8 +23,8 @@ function ma_accounts_profile_html($user) {
                 <td><span class="description"><?php echo esc_attr(get_the_author_meta('belt', $user->ID)); ?></span>
             </tr>
             <tr>
-                <th><label for="special">Special Programs</label></th>
-                <td><span class="description"><?php echo esc_attr(get_the_author_meta('special', $user->ID)); ?></span>
+                <th><label for="vip">VIP Programs</label></th>
+                <td><span class="description"><?php echo esc_attr(get_the_author_meta('vip', $user->ID)); ?></span>
             </tr>
         </tbody>
     </table>
@@ -65,10 +65,10 @@ function ma_accounts_edit_profile_html($user) {
                 </td>
             </tr>
             <tr>
-                <th><label for="special">Special Programs</label></th>
+                <th><label for="vip">VIP Programs</label></th>
                 <td>
                     Swat: <input style="vertical-align: top;" type="checkbox" name="swat" id="swat" /> <br />
-                    <span class="description">Additional programs student is currently enrolled in<?php echo esc_attr(get_the_author_meta('special', $user->ID)); ?></span>
+                    <span class="description">VIP programs student is currently enrolled in<?php echo esc_attr(get_the_author_meta('vip', $user->ID)); ?></span>
                 </td>
             </tr>
         </tbody>

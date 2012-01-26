@@ -13,10 +13,31 @@ require_once(dirname(__FILE__) . '/application/view/students.php');
 class ma_accounts {
     function __construct() {
         wp_enqueue_script('jquery');
+        wp_enqueue_script('jquery-ui-core');
+        wp_enqueue_script('jquery-ui-tabs');
+        wp_enqueue_script('jquery-ui-dialog');
+        wp_register_style('black-tie', plugins_url('application/view/css/jquery-ui.css', __FILE__));
+        wp_register_script('maAccountManagerScript', plugins_url('application/view/js/admin.js', __FILE__));
+
+        add_action('admin_menu', array(&$this, 'add_admin_menu'));
+        add_action('admin_init', array(&$this, 'admin_settings'));
+
         $this->update_roles();
         $this->update_edit_profile();
         $this->queue_view();
     } //End __construct
+
+    public function add_admin_menu() {
+        add_plugins_page('Manage account options, belts and special programs.', 'Martial Arts Acconts Manager', 'administrator', 'ma_accounts', array(&$this, 'render_backend'));
+    } //End add_admin_menu
+
+    public function admin_settings() {
+        register_setting('quiz_manager_settings', 'quiz_manager_settings', array(&$this, 'validate_settings'));
+
+        if (isset($_POST['action'])) {
+            update_option('quiz_manager_settings', $this->validate_settings($_POST['quiz_manager_settings']));
+        }
+    } //End admin_settings
 
     private function update_roles() {
         remove_role('editor'); //Make removing these optional
@@ -33,7 +54,8 @@ class ma_accounts {
 
         /**********
          * Need to find out if there is a way to make it so they can add users without being able to
-         * update roles (should only be able to add students
+         * update roles (should only be able to add students)
+         * Also need to figure out if I can make it so they can't promote themselves.
          */
         add_role('promoter', 'Promoter', array(
             'read' => True,
@@ -55,6 +77,12 @@ class ma_accounts {
         add_action('show_user_profile', 'ma_accounts_profile_html');
         add_action('edit_user_profile', 'ma_accounts_edit_profile_html');
     } //End update_edit_profile
+
+    public function render_backend() {
+        wp_enqueue_style('black-tie');
+        wp_enqueue_script('maAccountManagerScript');
+        include dirname(__FILE__) . '/application/view/options.php';
+    } //End render_backend
 
     private function queue_view() {
         add_action('template_redirect', array(&$this, 'show_view'));
