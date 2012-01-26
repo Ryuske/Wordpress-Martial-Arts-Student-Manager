@@ -6,7 +6,7 @@
 .ma_accounts_table tr:hover { background-color: #FFF; color: #000; }
 .ma_accounts_table td { vertical-align: middle; }
 
-.ma_accounts_ul { list-style-type: none; margin: 0; padding: 0; width: 100px; }
+.ma_accounts_ul { list-style-type: none; margin: 0; padding: 0; width: 140px; }
 .ma_accounts_ul_trash { height: 23px; padding: 3px 0; }
 .ma_accounts_ul table { border-collapse: collapse; }
 .ma_accounts_ul table, .ma_accounts_ul th, .ma_accounts_ul td { margin: 0; padding: 0; }

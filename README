@@ -1,1 +1,5 @@
 Wordpress plugin for managing martial arts students.
+
+TODO:
+Finish adding functionality to backend
+Update ma_accounts.php to respect settings

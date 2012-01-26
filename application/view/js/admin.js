@@ -34,6 +34,9 @@ jQuery('#sortable').sortable({
         for (var i=0; i<ma_accounts.sortable_original_order.length; i++) {
             ma_accounts.ul_order.push(jQuery('#sortable_trash div').children().eq(i).html());
         }
+
+        jQuery('#update_belt_order #new_order').val(new_order);
+        jQuery('#update_belt_order').submit();
     }
 });
 jQuery('#sortable').disableSelection();
@@ -80,16 +83,10 @@ jQuery('#add_belt').dialog({
     draggable: false,
     buttons: {
         Add: function() {
-            var fail = false;
-            for (var i=0; i < jQuery('#add_question input').length; i++) {
-                if (jQuery('#add_question input').eq(i).val() == '') {
-                    fail = true;
-                }
-            }
-            if (!fail) {
-                jQuery('#add_question').submit();
+            if (jQuery('#add_belt_form input').eq(4).val() != '') {
+                jQuery('#add_belt_form').submit();
             } else {
-                jQuery('#add_tips').css('color', 'red');
+                jQuery('#add_belt_notification').css('display', 'block');
             }
         },
         Cancel: function() {
@@ -134,7 +131,7 @@ jQuery('#delete_belt').dialog({
         draggable: false,
         buttons: {
             Delete: function() {
-                jQuery('#delete_question').submit();
+                jQuery('#delete_belt_form').submit();
             },
             Close: function() {
                  window.location = 'plugins.php?page=ma_accounts#belts_programs';
