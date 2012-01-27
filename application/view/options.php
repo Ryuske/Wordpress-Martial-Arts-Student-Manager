@@ -52,7 +52,7 @@ $settings = get_option('ma_accounts_settings');
         <h3 style="display: inline;">Belts</h3> <h5 style="display: inline; position: relative; bottom: 1px;"><a href="#belts_programs" onclick="jQuery('#add_belt').dialog('open')"><span class="ui-icon ui-icon-plusthick" style="display: inline-block; vertical-align: top;"></span>Add</a></h5>
         <?php
         if (empty($settings['belts'])) {
-            echo '<br />You haven\'t added any belts yet! <a href="#belts_programs" onclick="jQuery(\'#add_belt\').dialog(\'open\')">Add</a> one now.';
+            echo '<div>You haven\'t added any belts yet! <a href="#belts_programs" onclick="jQuery(\'#add_belt\').dialog(\'open\')">Add</a> one now.</div>';
         } else {
             ?>
             <form id="update_belt_order" action="options.php#belts_programs" method="post">
@@ -78,18 +78,28 @@ $settings = get_option('ma_accounts_settings');
                 </div>
             </div>
             <div style="clear: both;"></div>
-            <br />
-            <h3 style="display: inline;">VIP Programs</h3> <h5 style="display: inline; position: relative; bottom: 1px;"><a href="#belts_programs" onclick="jQuery('#add_program').dialog('open')"><span class="ui-icon ui-icon-plusthick" style="display: inline-block; vertical-align: top;"></span>Add</a></h5>
+            <?php
+        }
+        ?>
+        <br />
+        <h3 style="display: inline;">VIP Programs</h3> <h5 style="display: inline; position: relative; bottom: 1px;"><a href="#belts_programs" onclick="jQuery('#add_program').dialog('open')"><span class="ui-icon ui-icon-plusthick" style="display: inline-block; vertical-align: top;"></span>Add</a></h5>
+        <?php
+        if (empty($settings['programs'])) {
+            echo '<div>You haven\'t added any programs yet! <a href="#belts_programs" onclick="jQuery(\'#add_program\').dialog(\'open\')">Add</a> one now.</div>';
+        } else {
+            ?>
             <table>
                 <tbody>
-                    <tr>
-                        <td><a href="plugins.php?page=ma_accounts&id=swat&action=delete_program#belts_programs"><span class="ui-icon ui-icon-trash" style="padding: 2px 0;"></span></a></td>
-                        <td>Swat</td>
-                    </tr>
-                    <tr>
-                        <td><a href="plugins.php?page=ma_accounts&id=nlc&action=delete_program#belts_programs"><span class="ui-icon ui-icon-trash" style="padding: 2px 0;"></span></a></td>
-                        <td>NLC</td>
-                    </tr>
+                    <?php
+                    foreach ($settings['programs'] as $key => $value) {
+                        ?>
+                        <tr>
+                            <td><a href="plugins.php?page=ma_accounts&id=<?php echo (int) $value['id']; ?>&action=delete_program#belts_programs"><span class="ui-icon ui-icon-trash" style="padding: 2px 0;"></span></a></td>
+                            <td><?php esc_html_e($value['name']); ?></td>
+                        </tr>
+                        <?php
+                    }
+                    ?>
                 </tbody>
             </table>
             <?php
@@ -148,25 +158,28 @@ $settings = get_option('ma_accounts_settings');
     </div>
 
     <!--Dialog HTML for Belts and Special Programs-->
+    <!--Add Belt Dialog-->
     <div id="add_belt" title="Add Belt">
         <form id="add_belt_form" action="options.php#belts_programs" method="post">
             <?php settings_fields('ma_accounts_settings'); ?>
             <label class="ma_accounts_label">Title</label> <br />
-            <input name="ma_accounts_settings[belts]" type="text" />
-            <input style="display: none" name="Submit" type="submit" value="Save Changes" />
+            <input id="belt" name="ma_accounts_settings[belts]" type="text" />
         </form>
         <div id="add_belt_notification" class="ui-state-error ui-corner-all ma_accounts_notification" style="display: none; margin-top: 10px;"><span class="ui-icon ui-icon-info" style="float: left;"></span>&nbsp;Your forgot to add a belt!</div>
     </div>
 
+    <!--Add Program Dialog-->
    <div id="add_program" title="Add Program">
-        <form id="add_program_form" action="" method="post">
-            <input name="type" type="hidden" value="ma_accounts[add_program]" />
+        <form id="add_program_form" action="options.php#belts_programs" method="post">
+            <?php settings_fields('ma_accounts_settings'); ?>
             <label class="ma_accounts_label">Title</label> <br />
-            <input name="program" type="text" />
+            <input id="program" name="ma_accounts_settings[programs]" type="text" />
         </form>
+        <div id="add_program_notification" class="ui-state-error ui-corner-all ma_accounts_notification" style="display: none; margin-top: 10px;"><span class="ui-icon ui-icon-info" style="float: left;"></span>&nbsp;Your forgot to add a program!</div>
     </div>
 
 
+    <!--Delete Belt Dialog-->
     <?php
     if (is_numeric($_GET['id']) && $_GET['action'] === 'delete_belt') {
         $id = (int) $_GET['id'];
@@ -176,28 +189,43 @@ $settings = get_option('ma_accounts_settings');
     }
     ?>
     <div id="delete_belt" title="Delete Belt" style="text-align: center;">
-        Are you sure you want to delete the belt: <br />
-        <?php esc_html_e($settings['belts'][$id]['name']); ?>
-        <form id="delete_belt_form" action="options.php#belts_programs" method="post">
-            <?php settings_fields('ma_accounts_settings'); ?>
-            <input type="hidden" name="_wp_http_referer" value="/wp-admin/plugins.php?page=ma_accounts&amp;action=delete_belt">
-            <input name="ma_accounts_settings[belt_id]" type="hidden" value="<?php echo $id; ?>" />
-        </form>
+        <?php
+        if ($id <= count($settings['belts']) && $id > -1 && $_GET['action'] === 'delete_belt') {
+            ?>
+            Are you sure you want to delete the belt: <br />
+            <?php esc_html_e($settings['belts'][$id]['name']); ?>
+            <form id="delete_belt_form" action="options.php#belts_programs" method="post">
+                <?php settings_fields('ma_accounts_settings'); ?>
+                <input type="hidden" name="_wp_http_referer" value="/wp-admin/plugins.php?page=ma_accounts&amp;action=delete_belt">
+                <input name="ma_accounts_settings[belt_id]" type="hidden" value="<?php echo $id; ?>" />
+            </form>
+            <?php
+        }
+        ?>
     </div>
 
+    <!--Delete Program Dialog-->
     <?php
-    if (/*is_numeric($_GET['id']) && */$_GET['action'] === 'delete_program') {
+    if (is_numeric($_GET['id']) && $_GET['action'] === 'delete_program') {
+        $id = (int) $_GET['id'];
         ?>
         <script type="text/javascript">jQuery(document).ready(function(){jQuery('#delete_program').dialog('open')});</script>
         <?php
     }
     ?>
     <div id="delete_program" title="Delete Program" style="text-align: center;">
-        Are you sure you want to delete the program: <br />
-        Swat
-        <form id="delete_question" action="plugins.php?page=quiz_manager" method="post">
-            <input name="type" type="hidden" value="delete" />
-            <input name="id" type="hidden" value="koala" />
-        </form>
+        <?php
+        if ($_GET['id'] <= count($settings['programs']) && $_GET['id'] > -1 && $_GET['action'] === 'delete_program') {
+            ?>
+            Are you sure you want to delete the program: <br />
+            <?php esc_html_e($settings['programs'][$id]['name']); ?>
+            <form id="delete_program_form" action="options.php#belts_programs" method="post">
+                <?php settings_fields('ma_accounts_settings'); ?>
+                <input type="hidden" name="_wp_http_referer" value="/wp-admin/plugins.php?page=ma_accounts&amp;action=delete_program">
+                <input name="ma_accounts_settings[program_id]" type="hidden" value="<?php echo $id; ?>" />
+            </form>
+            <?php
+        }
+        ?>
     </div>
 </div>

@@ -63,15 +63,16 @@ class ma_accounts {
     } //End admin_settings
 
     public function validate_settings($input) {
+        $temp = '';
         $count = array(
             'belts' => count($this->options['belts']),
             'programs' => count($this->options['programs'])
         );
         foreach ($count as $key => &$value) {
-            if ($value > 1) {
-                $value--;
-            }
+            $value = (empty($this->options[$key])) ? 0 : $value;
         }
+        //print_r($this->options['programs']);
+        //die();
 
         $valid_options = array(
             'login_page' => trim($input['login_page']),
@@ -83,39 +84,6 @@ class ma_accounts {
             'belts' => $this->options['belts'],
             'programs' => $this->options['programs']
         );
-
-        if (array_key_exists('belts', $input)) {
-            $valid_options['belts'][] = array('id' => $count['belts'], 'name' => trim($input['belts']));
-        }
-
-        if (array_key_exists('new_order', $input)) {
-            $temp = $valid_options['belts'];
-            $valid_options['belts'] = '';
-            $int = 0;
-            $input['new_order'] = explode(',', $input['new_order']);
-            array_pop($input['new_order']);
-
-            foreach ($input['new_order'] as $id) {
-                $valid_options['belts'][] = array('id' => $int, 'name' => $temp[$id]['name']);
-                $int++;
-            }
-
-            $input['belts'] = 'updated_belt_order';
-        }
-
-        if (array_key_exists('belt_id', $input)) {
-            unset($valid_options['belts'][$input['belt_id']]);
-            $temp = $valid_options['belts'];
-            $int = 0;
-            $valid_options['belts'] = '';
-
-            foreach ($temp as $key => $value) {
-                $valid_options['belts'][] = array('id' => $int, 'name' => $value['name']);
-                $int++;
-            }
-
-            $input['belts'] = 'deleted_belt';
-        }
 
         foreach($valid_options as $key => &$value) {
             $value = (!array_key_exists($key, $input)) ? $this->options[$key] : $value;
@@ -129,8 +97,6 @@ class ma_accounts {
                     }
                     break;
                 case 'roles':
-                    $temp = '';
-
                     //Check roles to add
                     $temp = (is_array($value['add'])) ? $value['add'] : explode(',', $value['add']);
                     foreach ($temp as $role_key => &$role_value) {
@@ -155,6 +121,44 @@ class ma_accounts {
                         }
                     }
                     $value['remove'] = $temp;
+                    break;
+                case 'belts':
+                    if (array_key_exists('belts', $input)) {
+                        $valid_options['belts'][] = array('id' => $count['belts'], 'name' => trim($input['belts']));
+                    }
+
+                    if (array_key_exists('new_order', $input)) {
+                        $temp = $valid_options['belts'];
+                        $valid_options['belts'] = '';
+                        $int = 0;
+                        $input['new_order'] = explode(',', $input['new_order']);
+                        array_pop($input['new_order']);
+
+                        foreach ($input['new_order'] as $id) {
+                            $valid_options['belts'][] = array('id' => $int, 'name' => $temp[$id]['name']);
+                            $int++;
+                        }
+                    }
+
+                    if (array_key_exists('belt_id', $input)) {
+                        unset($valid_options['belts'][$input['belt_id']]);
+                        $temp = $valid_options['belts'];
+                        $int = 0;
+                        $valid_options['belts'] = '';
+
+                        foreach ($temp as $belt_key => $belt_value) {
+                            $valid_options['belts'][] = array('id' => $int, 'name' => $belt_value['name']);
+                            $int++;
+                        }
+                    }
+                    break;
+                case 'programs':
+                    if (array_key_exists('programs', $input)) {
+                        $valid_options['programs'][$count['programs']] = array('id' => $count['programs'], 'name' => trim($input['programs']));
+                    }
+                    if (array_key_exists('program_id', $input)) {
+                        unset($valid_options['programs'][$input['program_id']]);
+                    }
                     break;
                 default:
                     break;
