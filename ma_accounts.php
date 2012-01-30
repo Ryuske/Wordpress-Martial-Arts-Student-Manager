@@ -75,8 +75,6 @@ class ma_accounts {
         foreach ($count as $key => &$value) {
             $value = (empty($this->options[$key])) ? 0 : $value;
         }
-        //print_r($this->options['programs']);
-        //die();
 
         $valid_options = array(
             'login_page' => trim($input['login_page']),
@@ -199,16 +197,8 @@ class ma_accounts {
     } //End validate_settings
 
     private function update_roles() {
-        remove_role('editor'); //Make removing these optional
-        remove_role('author');
-        remove_role('contributor');
-        remove_role('subscriber');
-
-        if (NULL !== get_role('promoter')) {
-            remove_role('promoter');
-        }
-        if (NULL !== get_role('student')) {
-            remove_role('student');
+        foreach ($this->options['roles']['remove'] as $value) {
+            remove_role($value);
         }
 
         /**********
@@ -216,21 +206,22 @@ class ma_accounts {
          * update roles (should only be able to add students)
          * Also need to figure out if I can make it so they can't promote themselves.
          */
-        add_role('promoter', 'Promoter', array(
-            'read' => True,
-            'list_users' => True,
-            'edit_users' => True
-        ));
+        if (isset($this->options['roles']['add']['promoter'])) {
+            add_role('promoter', 'Promoter', array(
+                'read' => True,
+                'list_users' => True,
+                'edit_users' => True
+            ));
+        }
 
-        add_role('student', 'Student', array(
-            'read' => True
-        ));
+        if (isset($this->options['roles']['add']['promoter'])) {
+            add_role('student', 'Student', array(
+                'read' => True
+            ));
+        }
 
-        update_option('default_role', 'student'); //Make this optional
+        update_option('default_role', $this->options['roles']['default']);
     } //End update_roles
-
-    private function update_admin_options() {
-    } //End update_admin_options
 
     private function update_edit_profile() { //Update to object-oriented style
         add_action('show_user_profile', 'ma_accounts_profile_html');

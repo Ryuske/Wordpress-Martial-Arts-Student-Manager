@@ -152,7 +152,8 @@ $settings = get_option('ma_accounts_settings');
     <!--Help page-->
     <div id="help" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
         <h1>Help</h1>
-        <p>Eventually, I'll add this.</p>
+        <p>Rank information can only be updated from the options page, though it may be viewed in profile pages as well</p>
+        <p>Check us out on GitHub to track the latest updates and releases: <a href="https://github.com/Ryuske/Wordpress-Martial-Arts-Student-Manager" target="_blank">https://github.com/Ryuske/Wordpress-Martial-Arts-Student-Manager</a>
     </div>
 
     <!--Start dialog HTML-->

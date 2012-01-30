@@ -56,25 +56,30 @@ function ma_accounts_edit_profile_html($user) {
          */
     }
     ?>
-    <h3>Rank Information<h3>
+    <h3>Rank Information (Updated in MA Accounts options)<h3>
+    <?php $settings = get_option('ma_accounts_settings'); ?>
     <table class="form-table">
         <tbody>
             <tr>
                 <th><label for="belt">Belt</label></th>
                 <td>
-                    <select name="belt" id="belt">
-                    <option value="current"><?php echo esc_attr(get_the_author_meta('belt', $user->ID)); ?></option>
-                        <option disabled="disabled">-----------------------</option>
-                        <option value="white">White</option>
-                    </select> <br />
-                    <span class="description">Students current belt</span>
+                    <?php esc_html_e($settings['belts'][get_user_meta($user->ID, 'ma_accounts_belt', true)]['name']); ?>
                 </td>
             </tr>
             <tr>
                 <th><label for="vip">VIP Programs</label></th>
                 <td>
-                    Swat: <input style="vertical-align: top;" type="checkbox" name="swat" id="swat" /> <br />
-                    <span class="description">VIP programs student is currently enrolled in<?php echo esc_attr(get_the_author_meta('vip', $user->ID)); ?></span>
+                    <?php
+                    $temp = '';
+                    $programs_array = (get_user_meta($user->ID, 'ma_accounts_programs') !== '' ) ? explode(',', get_user_meta($user->ID, 'ma_accounts_programs', true)) : 'Not currently enrolled.';
+                    if (is_array($programs_array)) {
+                        foreach ($programs_array as $value) {
+                            $temp .= $settings['programs'][$value]['name'] . ', ';
+                        }
+                        $temp = substr($temp, 0, -2);
+                    }
+                    ?>
+                    <?php esc_html_e($temp); ?>
                 </td>
             </tr>
         </tbody>

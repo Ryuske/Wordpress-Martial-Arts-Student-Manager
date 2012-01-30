@@ -1,10 +1,11 @@
 <?php
 function ma_accounts_students($type='', $user='') {
+    $settings = get_option('ma_accounts_settings');
     if ('vip' === $type) {
         if (is_user_logged_in() || isset($user->ID)) {
-            $page = get_page_by_title('Students-LoggedIn');
+            $page = get_page_by_title($settings['login_page']);
         } else {
-            $page = get_page_by_title('VIP Students');
+            $page = get_page_by_title('VIP Students'); //Need to figure out how to make this dynamic...
             if (is_wp_error($user)) {
                 $page->post_content .= $user->get_error_message();
             }
@@ -21,11 +22,8 @@ function ma_accounts_students($type='', $user='') {
         get_footer();
         flush();
     } else {
-        //make $page dynamic in admin backend
-
         if (is_user_logged_in() || isset($user->ID)) {
-            //$page = get_page_by_title('Students-LoggedIn');
-            $page = get_page_by_title('Students');
+            $page = get_page_by_title($settings['login_page']);
         } else {
             $page = get_page_by_title('Students');
             if (is_wp_error($user)) {
