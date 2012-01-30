@@ -56,18 +56,8 @@ jQuery('#update_account').dialog({
     resizable: false,
     draggable: false,
     buttons: {
-        "Edit": function() {
-            var fail = false;
-            for (var i=0; i < jQuery('#add_question input').length; i++) {
-                if (jQuery('#add_question input').eq(i).val() == '') {
-                    fail = true;
-                }
-            }
-            if (!fail) {
-                jQuery('#add_question').submit();
-            } else {
-                jQuery('#add_tips').css('color', 'red');
-            }
+        Update: function() {
+            jQuery('#edit_account').submit();
         },
         Cancel: function() {
             jQuery(this).dialog('close');

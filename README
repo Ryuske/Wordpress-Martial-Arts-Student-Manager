@@ -1,7 +1,7 @@
 Wordpress plugin for managing martial arts students.
 
 TODO:
-Finish adding functionality to backend
 Update ma_accounts.php to respect settings
 Update profile pages to add belt/program functionality
 Thinking about find a new name for $ma_accounts->validate_input
+Write help page in Wordpress backend

@@ -23,7 +23,7 @@ class ma_accounts {
             'default' => 'student'
         ),
         'belts' => array(/*Example: array('id' => '', 'name' => '')*/),
-        'programs' => array()
+        'programs' => array(/*Example: array('id' => '', 'name' => '')*/)
     );
 
     function __construct() {
@@ -49,6 +49,10 @@ class ma_accounts {
 
     public function activate_plugin() {
         update_option('ma_accounts_settings', $this->options);
+        foreach (get_users() as $user) {
+            add_user_meta($user->ID, 'ma_accounts_belt', '');
+            add_user_meta($user->ID, 'ma_accounts_programs', '');
+        }
     } //End activate_plugin
 
     public function add_admin_menu() {
@@ -123,41 +127,67 @@ class ma_accounts {
                     $value['remove'] = $temp;
                     break;
                 case 'belts':
-                    if (array_key_exists('belts', $input)) {
-                        $valid_options['belts'][] = array('id' => $count['belts'], 'name' => trim($input['belts']));
-                    }
+                    if (array_key_exists('update_account', $input)) {
+                        $total_users = count_users();
+                        $total_users = $total_users['total_users'];
 
-                    if (array_key_exists('new_order', $input)) {
-                        $temp = $valid_options['belts'];
-                        $valid_options['belts'] = '';
-                        $int = 0;
-                        $input['new_order'] = explode(',', $input['new_order']);
-                        array_pop($input['new_order']);
-
-                        foreach ($input['new_order'] as $id) {
-                            $valid_options['belts'][] = array('id' => $int, 'name' => $temp[$id]['name']);
-                            $int++;
+                        if ($input['update_account'] <= $total_users && $input['update_account'] > 0) {
+                            $temp = (count($valid_options['belts']) > $input['belts']) ? $valid_options['belts'][$input['belts']]['id'] : '0';
+                            update_user_meta($input['update_account'], 'ma_accounts_belt', $temp);
                         }
-                    }
+                    } else {
+                        if (array_key_exists('belts', $input)) {
+                            $valid_options['belts'][] = array('id' => $count['belts'], 'name' => trim($input['belts']));
+                        }
 
-                    if (array_key_exists('belt_id', $input)) {
-                        unset($valid_options['belts'][$input['belt_id']]);
-                        $temp = $valid_options['belts'];
-                        $int = 0;
-                        $valid_options['belts'] = '';
+                        if (array_key_exists('new_order', $input)) {
+                            $temp = $valid_options['belts'];
+                            $valid_options['belts'] = '';
+                            $int = 0;
+                            $input['new_order'] = explode(',', $input['new_order']);
+                            array_pop($input['new_order']);
 
-                        foreach ($temp as $belt_key => $belt_value) {
-                            $valid_options['belts'][] = array('id' => $int, 'name' => $belt_value['name']);
-                            $int++;
+                            foreach ($input['new_order'] as $id) {
+                                $valid_options['belts'][] = array('id' => $int, 'name' => $temp[$id]['name']);
+                                $int++;
+                            }
+                        }
+
+                        if (array_key_exists('belt_id', $input)) {
+                            unset($valid_options['belts'][$input['belt_id']]);
+                            $temp = $valid_options['belts'];
+                            $int = 0;
+                            $valid_options['belts'] = '';
+
+                            foreach ($temp as $belt_key => $belt_value) {
+                                $valid_options['belts'][] = array('id' => $int, 'name' => $belt_value['name']);
+                                $int++;
+                            }
                         }
                     }
                     break;
                 case 'programs':
-                    if (array_key_exists('programs', $input)) {
-                        $valid_options['programs'][$count['programs']] = array('id' => $count['programs'], 'name' => trim($input['programs']));
-                    }
-                    if (array_key_exists('program_id', $input)) {
-                        unset($valid_options['programs'][$input['program_id']]);
+                    if (array_key_exists('update_account', $input)) {
+                        $total_users = count_users();
+                        $total_users = $total_users['total_users'];
+
+                        if ($input['update_account'] <= $total_users && $input['update_account'] > 0) {
+                            $temp = '';
+                            foreach ($input['programs'] as $program_key => $program_value) {
+                                if (is_array($valid_options['programs'][$program_key])) {
+                                    $temp .= $program_key . ',';
+                                }
+                            }
+                            $temp = substr($temp, 0, -1);
+                            update_user_meta($input['update_account'], 'ma_accounts_programs', $temp);
+                        }
+                    } else {
+                        if (array_key_exists('programs', $input)) {
+                            $valid_options['programs'][$count['programs']] = array('id' => $count['programs'], 'name' => trim($input['programs']));
+                        }
+                        if (array_key_exists('program_id', $input)) {
+                            unset($valid_options['programs'][$input['program_id']]);
+                        }
                     }
                     break;
                 default:

@@ -30,18 +30,39 @@ $settings = get_option('ma_accounts_settings');
         <h1>Accounts</h1>
         <table class="ma_accounts_table">
             <tbody>
-                <tr>
-                    <td class="icon"><a href="#" onclick="jQuery('#update_account').dialog('open');"><span class="ui-icon ui-icon-pencil" style="position: relative; margin: 0 auto;"></span></a></td>
-                    <td>Sensei Ryan</td>
-                    <td>5th Degree Black</td>
-                    <td>Swat, NLC</td>
-                </td>
-                <tr class="alt">
-                    <td class="icon"><span class="ui-icon ui-icon-pencil" style="position: relative; margin: 0 auto;"></span></td>
-                    <td>Kenyon Haliwell</td>
-                    <td>2nd Brown</td>
-                    <td>NLC</td>
-                </tr>
+                <?php
+                $alt = 0;
+                foreach (get_users('exclude=1&orderby=display_name') as $account) {
+                    $account_info = get_userdata($account->ID);
+                    $account_name = '';
+                    if (isset($account_info->nickname)) {
+                        $account_name = $account_info->nickname;
+                        if (isset($account_info->last_name)) {
+                            $account_name .= ' ' . $account_info->last_name;
+                        }
+                    } else if (isset($account_info->first_name) && isset($account_info->last_name)) {
+                        $account_name = $account_info->first_name . ' ' . $account_info->last_name;
+                    } else {
+                        $account_name = $account->display_name;
+                    }
+
+                    $account_programs = '';
+                    $account_programs_array = explode(',', get_user_meta($account->ID, 'ma_accounts_programs', true));
+                    foreach ($account_programs_array as $program) {
+                        $account_programs .= $settings['programs'][$program]['name'] . ', ';
+                    }
+                    $account_programs = substr($account_programs, 0, -2);
+                    echo (is_int($alt/2)) ? '<tr>' : '<tr class="alt">';
+                    ?>
+                        <td class="icon"><a href="plugins.php?page=ma_accounts&id=<?php echo $account->ID ?>&action=update_account#accounts"><span class="ui-icon ui-icon-pencil" style="position: relative; margin: 0 auto;"></span></a></td>
+                        <td><?php echo $account_name; ?></td>
+                        <td><?php echo (get_user_meta($account->ID, 'ma_accounts_belt', true) === '') ? 'No belt set' : esc_html($settings['belts'][get_user_meta($account->ID, 'ma_accounts_belt', true)]['name']); ?></td>
+                        <td><?php echo (get_user_meta($account->ID, 'ma_accounts_programs', true) === '') ? 'Not enrolled in any programs' : esc_html($account_programs); ?></td>
+                    </tr>
+                    <?php
+                    $alt++;
+                }
+                ?>
             </tbody>
         </table>
     </div>
@@ -135,26 +156,76 @@ $settings = get_option('ma_accounts_settings');
     </div>
 
     <!--Start dialog HTML-->
+    <?php
+    if (is_numeric($_GET['id']) && $_GET['action'] === 'update_account') {
+        $id = (int) $_GET['id'];
+        ?>
+        <script type="text/javascript">jQuery(document).ready(function(){jQuery('#update_account').dialog('open')});</script>
+        <?php
+    }
+    ?>
     <div id="update_account" title="Edit Account">
-        <h2 style="text-align: center">Sensei Ryan</h2>
-        <form id="edit_account" action="" method="post">
-            <input name="type" type="hidden" value="ma_accounts[edit_student]" />
-            <label class="ma_accounts_label">Belt</label>
-            <span><select name="belt"><option value="white">White</option></select></span> <br /><br />
-            <label class="ma_accounts_label">VIP Programs</label> <br />
-            <table>
-                <tbody>
-                    <tr>
-                        <td>SWAT</td>
-                        <td><input type="checkbox" value="swat" /></td>
-                    </tr>
-                    <tr>
-                        <td>NLC</td>
-                        <td><input type="checkbox" value="nlc" /></td>
-                    </tr>
-                </tbody>
-            </table>
-        </form>
+        <?php
+        $total_users = count_users();
+        $total_users = $total_users['total_users'];
+
+        if ($id <= $total_users && $id > 0) {
+            $account = get_userdata($id);
+            $name = '';
+            if (isset($account->nickname)) {
+                $name = $account->nickname;
+                if (isset($account->last_name)) {
+                    $name .= ' ' . $account->last_name;
+                }
+            } else if (isset($account->first_name) && isset($account->last_name)) {
+                $name = $account->first_name . ' ' . $account->last_name;
+            } else {
+                $name = $account->display_name;
+            }
+
+            if (get_user_meta($id, 'ma_accounts_programs', true) !== '') {
+                $programs_array = explode(',', get_user_meta($id, 'ma_accounts_programs', true));
+                $temp = array();
+                foreach ($programs_array as $value) {
+                    $temp[$value] = $value;
+                }
+            }
+            $programs_array = $temp;
+            unset($temp);
+            ?>
+            <h2 style="text-align: center"><?php esc_html_e($name); ?></h2>
+            <form id="edit_account" action="options.php#accounts" method="post">
+                <?php settings_fields('ma_accounts_settings'); ?>
+                <input name="ma_accounts_settings[update_account]" type="hidden" value="<?php echo $id; ?>" />
+                <label class="ma_accounts_label">Belt</label>
+                <span>
+                    <select name="ma_accounts_settings[belts]">
+                        <?php
+                        foreach ($settings['belts'] as $belt) {
+                            echo ($belt['id'] == get_user_meta($id, 'ma_accounts_belt', true)) ? '<option value="' . esc_html($belt['id']) . '" selected="selected">' . esc_html($belt['name']) . '</option>' : '<option value="' . esc_html($belt['id']) . '">' . esc_html($belt['name']) . '</option>';
+                        }
+                        ?>
+                    </select>
+                </span> <br /><br />
+                <label class="ma_accounts_label">VIP Programs</label> <br />
+                <table>
+                    <tbody>
+                        <?php
+                        foreach ($settings['programs'] as $program) {
+                            ?>
+                            <tr>
+                            <td><?php esc_html_e($program['name']); ?></td>
+                            <td><?php echo (isset($programs_array[$program['id']])) ? '<input name="ma_accounts_settings[programs][' . esc_html($program['id']) . ']" type="checkbox" value="' . esc_html($program['id']) . '" checked="checked" />' : '<input name="ma_accounts_settings[programs][' . esc_html($program['id']) . ']" type="checkbox" value="' . esc_html($program['id']) . '" />'; ?></td>
+                            </tr>
+                            <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </form>
+            <?php
+        }
+        ?>
     </div>
 
     <!--Dialog HTML for Belts and Special Programs-->
