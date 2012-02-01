@@ -2,7 +2,7 @@
 /*
 Plugin Name: Martial Arts Student Manager
 Description: Allows easy management of Martial Arts students.
-Version: 1.0
+Version: 1.5
 Author: Kenyon Haliwell
 License: GPL2
  */
