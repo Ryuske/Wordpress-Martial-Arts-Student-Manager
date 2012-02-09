@@ -1,5 +1,8 @@
 Wordpress plugin for managing martial arts students.
+To be used with PHP versions >=5.3
 
 TODO:
+Seperate ma_accounts.php and possibly options.php into multiple files
+Add option to track how often students login
 Update Accounts page in backend to support pagination. Maybe Belts & Programs page too.
 Thinking about find a new name for $ma_accounts->validate_input

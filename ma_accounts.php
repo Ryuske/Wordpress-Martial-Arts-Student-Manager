@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Martial Arts Student Manager
-Description: Allows easy management of Martial Arts students.
+Description: Allows easy management of Martial Arts students. (This version is to be used with PHP >=5.3)
 Version: 1.5
 Author: Kenyon Haliwell
 License: GPL2
