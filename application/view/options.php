@@ -48,9 +48,9 @@ $settings = get_option('ma_accounts_settings');
 
                     $account_programs = '';
                     $account_programs_array = explode(',', get_user_meta($account->ID, 'ma_accounts_programs', true));
-                    foreach ($account_programs_array as $program) {
-                        $account_programs .= $settings['programs'][$program]['name'] . ', ';
-                    }
+                    array_walk($account_programs_array, function($program_value, $program_key) use(&$account_programs, $settings) {
+                        $account_programs .= $settings['programs'][$program_value]['name'] . ', ';
+                    });
                     $account_programs = substr($account_programs, 0, -2);
                     echo (is_int($alt/2)) ? '<tr>' : '<tr class="alt">';
                     ?>
@@ -83,17 +83,17 @@ $settings = get_option('ma_accounts_settings');
             <div id="sortable_trash" style="width: 160px;">
                 <div style="float: left;">
                     <?php
-                    foreach ($settings['belts'] as $key => $value) {
-                        echo '<div class="ma_accounts_ul_trash"><a href="plugins.php?page=ma_accounts&id=' . (int) $value['id'] . '&action=delete_belt#belts_programs"><span class="ui-icon ui-icon-trash"></span></a></div>';
-                    }
+                    array_walk($settings['belts'], function($belt_value, $belt_key) {
+                        echo '<div class="ma_accounts_ul_trash"><a href="plugins.php?page=ma_accounts&id=' . (int) $belt_value['id'] . '&action=delete_belt#belts_programs"><span class="ui-icon ui-icon-trash"></span></a></div>';
+                    });
                     ?>
                 </div>
                 <div style="float: right;">
                     <ul id="sortable" class="ma_accounts_ul">
                         <?php
-                        foreach ($settings['belts'] as $key => $value) {
-                            echo '<li id="' . (int) $value['id'] . '" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s" style="float: left;"></span>' . esc_html($value['name']) . '</li>';
-                        }
+                        array_walk($settings['belts'], function($belt_value, $belt_key) {
+                            echo '<li id="' . (int) $belt_value['id'] . '" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s" style="float: left;"></span>' . esc_html($belt_value['name']) . '</li>';
+                        });
                         ?>
                     <ul>
                 </div>
@@ -112,14 +112,14 @@ $settings = get_option('ma_accounts_settings');
             <table>
                 <tbody>
                     <?php
-                    foreach ($settings['programs'] as $key => $value) {
+                    array_walk($settings['programs'], function($program_value, $program_key) {
                         ?>
                         <tr>
-                            <td><a href="plugins.php?page=ma_accounts&id=<?php echo (int) $value['id']; ?>&action=delete_program#belts_programs"><span class="ui-icon ui-icon-trash" style="padding: 2px 0;"></span></a></td>
-                            <td><?php esc_html_e($value['name']); ?></td>
+                            <td><a href="plugins.php?page=ma_accounts&id=<?php echo (int) $program_value['id']; ?>&action=delete_program#belts_programs"><span class="ui-icon ui-icon-trash" style="padding: 2px 0;"></span></a></td>
+                            <td><?php esc_html_e($program_value['name']); ?></td>
                         </tr>
                         <?php
-                    }
+                    });
                     ?>
                 </tbody>
             </table>
@@ -145,7 +145,7 @@ $settings = get_option('ma_accounts_settings');
             <label>Default Role</label> <br />
             <input name="ma_accounts_settings[roles][default]" type="text" value="<?php esc_html_e($settings['roles']['default']); ?>" /> <br /><br />
 
-            <input class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" type="submit" name="Koala" value="Save Changes" />
+            <input class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" type="submit" value="Save Changes" />
         </form>
     </div>
 
@@ -153,6 +153,7 @@ $settings = get_option('ma_accounts_settings');
     <div id="help" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
         <h1>Help</h1>
         <p>Rank information can only be updated from the options page, though it may be viewed in profile pages as well</p>
+        <p>Our options name is "ma_accounts_settings". If you're not sure what this mean, please ignore it.</p>
         <p>Check us out on GitHub to track the latest updates and releases: <a href="https://github.com/Ryuske/Wordpress-Martial-Arts-Student-Manager" target="_blank">https://github.com/Ryuske/Wordpress-Martial-Arts-Student-Manager</a>
     </div>
 
@@ -187,9 +188,9 @@ $settings = get_option('ma_accounts_settings');
             if (get_user_meta($id, 'ma_accounts_programs', true) !== '') {
                 $programs_array = explode(',', get_user_meta($id, 'ma_accounts_programs', true));
                 $temp = array();
-                foreach ($programs_array as $value) {
-                    $temp[$value] = $value;
-                }
+                array_walk($programs_array, function($program_value, $program_key) use(&$temp) {
+                    $temp[$program_value] = $program_value;
+                });
             }
             $programs_array = $temp;
             unset($temp);
@@ -197,14 +198,15 @@ $settings = get_option('ma_accounts_settings');
             <h2 style="text-align: center"><?php esc_html_e($name); ?></h2>
             <form id="edit_account" action="options.php#accounts" method="post">
                 <?php settings_fields('ma_accounts_settings'); ?>
+                <input type="hidden" name="_wp_http_referer" value="/wp-admin/plugins.php?page=ma_accounts&amp;action=update_account">
                 <input name="ma_accounts_settings[update_account]" type="hidden" value="<?php echo $id; ?>" />
                 <label class="ma_accounts_label">Belt</label>
                 <span>
                     <select name="ma_accounts_settings[belts]">
                         <?php
-                        foreach ($settings['belts'] as $belt) {
-                            echo ($belt['id'] == get_user_meta($id, 'ma_accounts_belt', true)) ? '<option value="' . esc_html($belt['id']) . '" selected="selected">' . esc_html($belt['name']) . '</option>' : '<option value="' . esc_html($belt['id']) . '">' . esc_html($belt['name']) . '</option>';
-                        }
+                        array_walk($settings['belts'], function($belt_value, $belt_key) use($id) {
+                            echo ($belt_value['id'] == get_user_meta($id, 'ma_accounts_belt', true)) ? '<option value="' . esc_html($belt_value['id']) . '" selected="selected">' . esc_html($belt_value['name']) . '</option>' : '<option value="' . esc_html($belt_value['id']) . '">' . esc_html($belt_value['name']) . '</option>';
+                        });
                         ?>
                     </select>
                 </span> <br /><br />
@@ -212,14 +214,14 @@ $settings = get_option('ma_accounts_settings');
                 <table>
                     <tbody>
                         <?php
-                        foreach ($settings['programs'] as $program) {
+                        array_walk($settings['programs'], function($program_value, $program_key) use($programs_array) {
                             ?>
                             <tr>
-                            <td><?php esc_html_e($program['name']); ?></td>
-                            <td><?php echo (isset($programs_array[$program['id']])) ? '<input name="ma_accounts_settings[programs][' . esc_html($program['id']) . ']" type="checkbox" value="' . esc_html($program['id']) . '" checked="checked" />' : '<input name="ma_accounts_settings[programs][' . esc_html($program['id']) . ']" type="checkbox" value="' . esc_html($program['id']) . '" />'; ?></td>
+                            <td><?php esc_html_e($program_value['name']); ?></td>
+                            <td><?php echo (isset($programs_array[$program_value['id']])) ? '<input name="ma_accounts_settings[programs][' . esc_html($program_value['id']) . ']" type="checkbox" value="' . esc_html($program_value['id']) . '" checked="checked" />' : '<input name="ma_accounts_settings[programs][' . esc_html($program_value['id']) . ']" type="checkbox" value="' . esc_html($program_value['id']) . '" />'; ?></td>
                             </tr>
                             <?php
-                        }
+                        });
                         ?>
                     </tbody>
                 </table>
@@ -234,6 +236,7 @@ $settings = get_option('ma_accounts_settings');
     <div id="add_belt" title="Add Belt">
         <form id="add_belt_form" action="options.php#belts_programs" method="post">
             <?php settings_fields('ma_accounts_settings'); ?>
+            <input type="hidden" name="_wp_http_referer" value="/wp-admin/plugins.php?page=ma_accounts&amp;action=add_belt">
             <label class="ma_accounts_label">Title</label> <br />
             <input id="belt" name="ma_accounts_settings[belts]" type="text" />
         </form>

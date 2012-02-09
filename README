@@ -1,4 +1,5 @@
 Wordpress plugin for managing martial arts students.
 
 TODO:
+Update Accounts page in backend to support pagination. Maybe Belts & Programs page too.
 Thinking about find a new name for $ma_accounts->validate_input

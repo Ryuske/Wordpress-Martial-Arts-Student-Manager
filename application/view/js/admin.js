@@ -54,7 +54,6 @@ jQuery('#update_account').dialog({
     width: 350,
     modal: true,
     resizable: false,
-    draggable: false,
     buttons: {
         Update: function() {
             jQuery('#edit_account').submit();
@@ -70,7 +69,6 @@ jQuery('#add_belt').dialog({
     width: 350,
     modal: true,
     resizable: false,
-    draggable: false,
     buttons: {
         Add: function() {
             if (jQuery('#add_belt_form #belt').val() !== '') {
@@ -90,7 +88,6 @@ jQuery('#add_program').dialog({
     width: 350,
     modal: true,
     resizable: false,
-    draggable: false,
     buttons: {
         Add: function() {
             if (jQuery('#add_program_form #program').val() !== '') {
@@ -112,7 +109,6 @@ jQuery('#delete_belt').dialog({
         height: 140,
         modal: true,
         resizable: false,
-        draggable: false,
         buttons: {
             Delete: function() {
                 jQuery('#delete_belt_form').submit();
@@ -129,7 +125,6 @@ jQuery('#delete_program').dialog({
         height: 140,
         modal: true,
         resizable: false,
-        draggable: false,
         buttons: {
             Delete: function() {
                 jQuery('#delete_program_form').submit();
