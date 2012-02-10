@@ -73,9 +73,9 @@ function ma_accounts_edit_profile_html($user) {
                     $temp = '';
                     $programs_array = (get_user_meta($user->ID, 'ma_accounts_programs') !== '' ) ? explode(',', get_user_meta($user->ID, 'ma_accounts_programs', true)) : 'Not currently enrolled.';
                     if (is_array($programs_array)) {
-                        array_walk($programs_array, function($program_value, $program_key) use(&$temp, $settings) {
+                        foreach ($programs_array as $program_key => $program_value) {
                             $temp .= $settings['programs'][$program_value]['name'] . ', ';
-                        });
+                        }
                         $temp = substr($temp, 0, -2);
                     }
                     ?>

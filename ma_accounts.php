@@ -73,9 +73,9 @@ class ma_accounts {
             'belts' => count($this->options['belts']),
             'programs' => count($this->options['programs'])
         );
-        array_walk($count, function($count_value, $count_key) use (&$count, $temp_this) {
+        foreach ($count as $count_key => $count_value) {
             $count[$count_key] = (empty($temp_this->options[$count_key])) ? 0 : $count_value;
-        });
+        }
 
         $valid_options = array(
             'login_page' => trim($input['login_page']),
@@ -88,11 +88,11 @@ class ma_accounts {
             'programs' => $this->options['programs']
         );
 
-        array_walk($valid_options, function($vo_value, $vo_key) use(&$valid_options, $temp_this, $input) {
+        foreach ($valid_options as $vo_key => $vo_value) {
             $valid_options[$vo_key] = (!array_key_exists($vo_key, $input)) ? $temp_this->options[$vo_key] : $vo_value;
-        });
+        }
 
-        array_walk($valid_options, function($vo_value, $vo_key) use(&$valid_options, &$temp_this, $input) {
+        foreach ($valid_options as $vo_key => $vo_value) {
             switch ($vo_key) {
                 case 'login_page':
                     if (!get_page_by_title($vo_value)) {
@@ -102,11 +102,11 @@ class ma_accounts {
                 case 'roles':
                     //Check roles to add
                     $temp = (is_array($vo_value['add'])) ? $vo_value['add'] : explode(',', $vo_value['add']);
-                    array_walk($temp, function($role_value, $role_key) use(&$temp, $temp_this) {
+                    foreach ($temp as $role_key => $role_value) {
                         if (!in_array($role_value, $temp_this->plugin_info['available_roles'])) {
                             unset($temp[$role_key]);
                         }
-                    });
+                    }
 
                     //Check default role
                     if (!get_role($vo_value['default']) && !in_array($vo_value['default'], $temp)) {
@@ -118,11 +118,11 @@ class ma_accounts {
 
                     //Check roles to remove
                     $temp = (is_array($vo_value['remove'])) ? $vo_value['remove'] : explode(',', $vo_value['remove']);
-                    array_walk($temp, function($role_value, $role_key) use(&$temp, $vo_value) {
+                    foreach ($temp as $role_key => $role_value) {
                         if (!get_role($role_value) || $role_value === $vo_value['default']) {
                             unset($temp[$role_key]);
                         }
-                    });
+                    }
                     $valid_options['roles']['remove'] = $temp;
                     break;
                 case 'belts':
@@ -149,17 +149,17 @@ class ma_accounts {
                             $input['new_order'] = explode(',', $input['new_order']);
                             array_pop($input['new_order']);
 
-                            array_walk($input['new_order'], function($order_value, $order_key) use(&$valid_options, $temp, &$int) {
+                            foreach ($input['new_order'] as $order_key => $order_value) {
                                 $valid_options['belts'][] = array('id' => $int, 'name' => $temp[$order_value]['name']);
                                 $int++;
-                            });
+                            }
 
                             foreach (get_users() as $user) {
-                                array_walk($vo_value, function($belt_value, $belt_key) use(&$temp) {
+                                foreach ($vo_value as $belt_key => $belt_value) {
                                     if ($temp[get_user_meta($user->ID, 'ma_accounts_belt', true)]['name'] == $belt_value['name']) {
                                         update_user_meta($user->ID, 'ma_accounts_belt', $belt_value['id']);
                                     }
-                                });
+                                }
                             }
                         }
 
@@ -170,10 +170,10 @@ class ma_accounts {
                             $int = 0;
                             $valid_options['belts'] = '';
 
-                            array_walk($temp, function($belt_value, $belt_key) use(&$valid_options, &$int) {
+                            foreach ($temp as $belt_key => $belt_value) {
                                 $valid_options['belts'][] = array('id' => $int, 'name' => $belt_value['name']);
                                 $int++;
-                            });
+                            }
 
                             foreach (get_users() as $user) {
                                 if (get_user_meta($user->ID, 'ma_accounts_belt', true) === $input['belt_id']) {
@@ -191,11 +191,11 @@ class ma_accounts {
                         //Update account with program
                         if ($input['update_account'] <= $total_users && $input['update_account'] > 0) {
                             $temp = '';
-                            array_walk($input['programs'], function($program_value, $program_key) use(&$temp, $valid_options) {
+                            foreach ($input['programs'] as $program_key => $program_value) {
                                 if (is_array($valid_options['programs'][$program_key])) {
                                     $temp .= $program_key . ',';
                                 }
-                            });
+                            }
                             $temp = substr($temp, 0, -1);
                             update_user_meta($input['update_account'], 'ma_accounts_programs', $temp);
                         }
@@ -223,7 +223,7 @@ class ma_accounts {
                 default:
                     break;
             }
-        });
+        }
         /*foreach ($this as $this_key => &$this_value) {
             foreach ($temp_this as $temp_this_key => $temp_this_value) {
                 if ($this_key == $temp_this_key) {
@@ -236,9 +236,9 @@ class ma_accounts {
     } //End validate_settings
 
     private function update_roles() {
-        array_walk($this->options['roles']['remove'], function($role_value, $role_key) {
+        foreach ($this->options['roles']['remove'] as $role_key => $role_value) {
             remove_role($role_value);
-        });
+        }
 
         /**********
          * Need to find out if there is a way to make it so they can add users without being able to
