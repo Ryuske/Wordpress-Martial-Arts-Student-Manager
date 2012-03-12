@@ -37,6 +37,9 @@ class ma_accounts {
         wp_register_style('maAccountsStylesheet', plugins_url('application/view/css/ma_accounts.css', __FILE__));
         wp_register_script('maAccountsScript', plugins_url('application/view/js/admin.js', __FILE__));
 
+        wp_register_script('jquery-cookie', plugins_url('/application/view/js/jquery-cookie/jquery.cookie.js', __FILE__));
+        wp_enqueue_script('jquery-cookie');
+
         register_activation_hook(__FILE__, array(&$this, 'activate_plugin'));
 
         add_action('admin_menu', array(&$this, 'add_admin_menu'));
@@ -262,7 +265,7 @@ class ma_accounts {
         update_option('default_role', $this->options['roles']['default']);
     } //End update_roles
 
-    private function update_edit_profile() { //Update to object-oriented style
+    private function update_edit_profile() { //Update to object-oriented style (i.e. array(&$this, 'funcName'))
         add_action('show_user_profile', 'ma_accounts_profile_html');
         add_action('edit_user_profile', 'ma_accounts_edit_profile_html');
     } //End update_edit_profile
