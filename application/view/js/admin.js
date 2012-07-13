@@ -36,7 +36,7 @@ jQuery('#sortable').sortable({
         }
 
         jQuery('#update_belt_order #new_order').val(new_order);
-        jQuery('#update_belt_order').submit();
+        //jQuery('#update_belt_order').submit();
     }
 });
 jQuery('#sortable').disableSelection();

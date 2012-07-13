@@ -35,15 +35,10 @@ $settings = get_option('ma_accounts_settings');
                 foreach (get_users('exclude=1&orderby=display_name') as $account) {
                     $account_info = get_userdata($account->ID);
                     $account_name = '';
-                    if (isset($account_info->nickname)) {
-                        $account_name = $account_info->nickname;
-                        if (isset($account_info->last_name)) {
-                            $account_name .= ' ' . $account_info->last_name;
-                        }
-                    } else if (isset($account_info->first_name) && isset($account_info->last_name)) {
-                        $account_name = $account_info->first_name . ' ' . $account_info->last_name;
+                    if (isset($account_info->first_name) && isset($account_info->last_name)) {
+                        $account_name = $account_info->first_name . ' ' . $account_info->last_name . ' (' . $account_info->nickname . ')';
                     } else {
-                        $account_name = $account->display_name;
+                        $account_name = $account->nickname;
                     }
 
                     $account_programs = '';
