@@ -35,10 +35,10 @@ $settings = get_option('ma_accounts_settings');
                 foreach (get_users('exclude=1&orderby=display_name') as $account) {
                     $account_info = get_userdata($account->ID);
                     $account_name = '';
-                    if (isset($account_info->first_name) && isset($account_info->last_name)) {
+                    if (!empty($account_info->first_name) && !empty($account_info->last_name)) {
                         $account_name = $account_info->first_name . ' ' . $account_info->last_name . ' (' . $account_info->nickname . ')';
                     } else {
-                        $account_name = $account->nickname;
+                        $account_name = $account_info->nickname;
                     }
 
                     $account_programs = '';
@@ -163,11 +163,9 @@ $settings = get_option('ma_accounts_settings');
     ?>
     <div id="update_account" title="Edit Account">
         <?php
-        $total_users = count_users();
-        $total_users = $total_users['total_users'];
+        $account = get_userdata($id);
 
-        if ($id <= $total_users && $id > 0) {
-            $account = get_userdata($id);
+        if ($account) {
             $name = '';
             if (isset($account->nickname)) {
                 $name = $account->nickname;
@@ -222,6 +220,8 @@ $settings = get_option('ma_accounts_settings');
                 </table>
             </form>
             <?php
+        } else {
+            echo 'Invalid user ID.';
         }
         ?>
     </div>
@@ -260,7 +260,7 @@ $settings = get_option('ma_accounts_settings');
     ?>
     <div id="delete_belt" title="Delete Belt" style="text-align: center;">
         <?php
-        if ($id <= count($settings['belts']) && $id > -1 && $_GET['action'] === 'delete_belt') {
+        if (!empty($settings['belts'][$id]) && $_GET['action'] === 'delete_belt') {
             ?>
             Are you sure you want to delete the belt: <br />
             <?php esc_html_e($settings['belts'][$id]['name']); ?>
@@ -270,6 +270,8 @@ $settings = get_option('ma_accounts_settings');
                 <input name="ma_accounts_settings[belt_id]" type="hidden" value="<?php echo $id; ?>" />
             </form>
             <?php
+        } else {
+            echo 'Invalid belt ID.';
         }
         ?>
     </div>
@@ -285,7 +287,7 @@ $settings = get_option('ma_accounts_settings');
     ?>
     <div id="delete_program" title="Delete Program" style="text-align: center;">
         <?php
-        if ($_GET['id'] <= count($settings['programs']) && $_GET['id'] > -1 && $_GET['action'] === 'delete_program') {
+        if (!empty($settings['programs'][$id]) && $_GET['action'] === 'delete_program') {
             ?>
             Are you sure you want to delete the program: <br />
             <?php esc_html_e($settings['programs'][$id]['name']); ?>
@@ -295,6 +297,8 @@ $settings = get_option('ma_accounts_settings');
                 <input name="ma_accounts_settings[program_id]" type="hidden" value="<?php echo $id; ?>" />
             </form>
             <?php
+        } else {
+            echo 'Invalid program ID.';
         }
         ?>
     </div>
