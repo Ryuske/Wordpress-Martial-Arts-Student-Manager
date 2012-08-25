@@ -1,5 +1,6 @@
 <?php
-function ma_accounts_profile_html($user) {
+class profile_html extends ma_accounts {
+    function __construct($user) {
     /*
     ?>
     <script type="text/javascript">
@@ -33,10 +34,12 @@ function ma_accounts_profile_html($user) {
         </tbody>
     </table>
     <?php
-}
+    } //End __construct
+} //End profile_html
 
-function ma_accounts_edit_profile_html($user) {
-    if ('administrator' !== wp_get_current_user()->roles[0]) {
+class edit_profile_html extends ma_accounts {
+    function __construct($user) {
+        if ('administrator' !== wp_get_current_user()->roles[0]) {
         /*
         ?>
         <script type="text/javascript">
@@ -54,36 +57,37 @@ function ma_accounts_edit_profile_html($user) {
         </script>
          * Add this in some future version, maybe
          */
-    }
-    ?>
-    <h3>Rank Information (Updated in MA Accounts options)<h3>
-    <?php $settings = get_option('ma_accounts_settings'); ?>
-    <table class="form-table">
-        <tbody>
-            <tr>
-                <th><label for="belt">Belt</label></th>
-                <td>
-                    <?php esc_html_e($settings['belts'][get_user_meta($user->ID, 'ma_accounts_belt', true)]['name']); ?>
-                </td>
-            </tr>
-            <tr>
-                <th><label for="vip">VIP Programs</label></th>
-                <td>
-                    <?php
-                    $temp = '';
-                    $programs_array = (get_user_meta($user->ID, 'ma_accounts_programs') !== '' ) ? explode(',', get_user_meta($user->ID, 'ma_accounts_programs', true)) : 'Not currently enrolled.';
-                    if (is_array($programs_array)) {
-                        foreach ($programs_array as $program_key => $program_value) {
-                            $temp .= $settings['programs'][$program_value]['name'] . ', ';
+        }
+        ?>
+        <h3>Rank Information (Updated in MA Accounts options)<h3>
+        <?php $settings = get_option('ma_accounts_settings'); ?>
+        <table class="form-table">
+            <tbody>
+                <tr>
+                    <th><label for="belt">Belt</label></th>
+                    <td>
+                        <?php esc_html_e($settings['belts'][get_user_meta($user->ID, 'ma_accounts_belt', true)]['name']); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="vip">VIP Programs</label></th>
+                    <td>
+                        <?php
+                        $temp = '';
+                        $programs_array = (get_user_meta($user->ID, 'ma_accounts_programs') !== '' ) ? explode(',', get_user_meta($user->ID, 'ma_accounts_programs', true)) : 'Not currently enrolled.';
+                        if (is_array($programs_array)) {
+                            foreach ($programs_array as $program_key => $program_value) {
+                                $temp .= $settings['programs'][$program_value]['name'] . ', ';
+                            }
+                            $temp = substr($temp, 0, -2);
                         }
-                        $temp = substr($temp, 0, -2);
-                    }
-                    ?>
-                    <?php esc_html_e($temp); ?>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <?php
-}
+                        ?>
+                        <?php esc_html_e($temp); ?>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <?php
+    } //End __construct
+} //End edit_profile_html
 ?>

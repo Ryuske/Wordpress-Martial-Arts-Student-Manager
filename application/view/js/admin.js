@@ -11,6 +11,12 @@ jQuery(document).ready(function(){
     jQuery("#option-tabs").bind("tabsshow", function(event, ui) { 
         window.location.hash = ui.tab.hash;
     })
+
+    jQuery('td').each(function(index) {
+        if (jQuery(this).text() == "No belt set") {
+            jQuery(this).parent().css('background-color', 'red');
+        }
+    });
 });
 
 /*
@@ -36,7 +42,7 @@ jQuery('#sortable').sortable({
         }
 
         jQuery('#update_belt_order #new_order').val(new_order);
-        //jQuery('#update_belt_order').submit();
+        jQuery('#update_belt_order').submit();
     }
 });
 jQuery('#sortable').disableSelection();

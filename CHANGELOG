@@ -1,0 +1,5 @@
+8/25/2012 - Commit 1
+    Fixed issue where couldn't remove all programs from a student
+    Enabled reordering belts
+    Split ma_accounts.php into multiple files using controllers
+    Updated README

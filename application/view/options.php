@@ -32,8 +32,10 @@ $settings = get_option('ma_accounts_settings');
             <tbody>
                 <?php
                 $alt = 0;
-                foreach (get_users('exclude=1&orderby=display_name') as $account) {
-                    $account_info = get_userdata($account->ID);
+                $accounts = get_users('exclude=1&orderby=display_name');
+                print_r($settings['belts']);
+                array_walk($accounts, function($account_value, $account_key) use($settings, &$alt) {
+                    $account_info = get_userdata($account_value->ID);
                     $account_name = '';
                     if (!empty($account_info->first_name) && !empty($account_info->last_name)) {
                         $account_name = $account_info->first_name . ' ' . $account_info->last_name . ' (' . $account_info->nickname . ')';
@@ -42,21 +44,21 @@ $settings = get_option('ma_accounts_settings');
                     }
 
                     $account_programs = '';
-                    $account_programs_array = explode(',', get_user_meta($account->ID, 'ma_accounts_programs', true));
+                    $account_programs_array = explode(',', get_user_meta($account_value->ID, 'ma_accounts_programs', true));
                     foreach ($account_programs_array as $program_key => $program_value) {
                         $account_programs .= $settings['programs'][$program_value]['name'] . ', ';
                     }
                     $account_programs = substr($account_programs, 0, -2);
                     echo (is_int($alt/2)) ? '<tr>' : '<tr class="alt">';
                     ?>
-                        <td class="icon"><a href="plugins.php?page=ma_accounts&id=<?php echo $account->ID ?>&action=update_account#accounts"><span class="ui-icon ui-icon-pencil" style="position: relative; margin: 0 auto;"></span></a></td>
+                        <td class="icon"><a href="plugins.php?page=ma_accounts&id=<?php echo $account_value->ID ?>&action=update_account#accounts"><span class="ui-icon ui-icon-pencil" style="position: relative; margin: 0 auto;"></span></a></td>
                         <td><?php echo $account_name; ?></td>
-                        <td><?php echo (get_user_meta($account->ID, 'ma_accounts_belt', true) === '') ? 'No belt set' : esc_html($settings['belts'][get_user_meta($account->ID, 'ma_accounts_belt', true)]['name']); ?></td>
-                        <td><?php echo (get_user_meta($account->ID, 'ma_accounts_programs', true) === '') ? 'Not enrolled in any programs' : esc_html($account_programs); ?></td>
+                        <td><?php echo (get_user_meta($account_value->ID, 'ma_accounts_belt', true) === '') ? 'No belt set' : esc_html($settings['belts'][get_user_meta($account_value->ID, 'ma_accounts_belt', true)]['name']); ?></td>
+                        <td><?php echo (get_user_meta($account_value->ID, 'ma_accounts_programs', true) === '') ? 'Not enrolled in any programs' : esc_html($account_programs); ?></td>
                     </tr>
                     <?php
                     $alt++;
-                }
+                });
                 ?>
             </tbody>
         </table>
@@ -167,15 +169,10 @@ $settings = get_option('ma_accounts_settings');
 
         if ($account) {
             $name = '';
-            if (isset($account->nickname)) {
-                $name = $account->nickname;
-                if (isset($account->last_name)) {
-                    $name .= ' ' . $account->last_name;
-                }
-            } else if (isset($account->first_name) && isset($account->last_name)) {
-                $name = $account->first_name . ' ' . $account->last_name;
+            if (isset($account->first_name) && isset($account->last_name)) {
+                $name = $account->first_name . ' ' . $account->last_name . ' (' . $account->nickname . ')';
             } else {
-                $name = $account->display_name;
+                $name = $account->nickname;
             }
 
             if (get_user_meta($id, 'ma_accounts_programs', true) !== '') {
