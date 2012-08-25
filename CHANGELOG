@@ -1,3 +1,7 @@
+8/25/2012 - Commit 2
+    Added wireframing for sorting accounts in backend
+    Merged OlderPHP into master; Also removed OlderPHP branch
+
 8/25/2012 - Commit 1
     Fixed issue where couldn't remove all programs from a student
     Enabled reordering belts

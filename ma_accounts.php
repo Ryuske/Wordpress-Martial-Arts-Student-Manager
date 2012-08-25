@@ -49,8 +49,13 @@ class ma_accounts {
             add_user_meta($user->ID, 'ma_accounts_belt', '');
             add_user_meta($user->ID, 'ma_accounts_programs', '');
         }
-    } //End activate_plugin
+    } //End activate_plugini
+
+    public function sort_accounts($sort_by) {
+        //Allow sorting by belt or program based on numerical IDs
+    } //End sort_accounts
 } //End ma_accounts
+
 $ma_accounts = array('main' => '', 'generate_views' => '', 'update_settings' => '');
 $ma_accounts['main'] = new ma_accounts;
 $ma_accounts['generate_views'] = new ma_accounts_generate_views;
