@@ -11,6 +11,12 @@ jQuery(document).ready(function(){
     jQuery("#option-tabs").bind("tabsshow", function(event, ui) { 
         window.location.hash = ui.tab.hash;
     })
+
+    jQuery('td').each(function(index) {
+        if (jQuery(this).text() == "No belt set") {
+            jQuery(this).parent().css('background-color', 'red');
+        }
+    });
 });
 
 /*

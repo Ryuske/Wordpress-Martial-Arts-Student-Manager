@@ -32,31 +32,33 @@ $settings = get_option('ma_accounts_settings');
             <tbody>
                 <?php
                 $alt = 0;
-                foreach (get_users('exclude=1&orderby=display_name') as $account) {
-                    $account_info = get_userdata($account->ID);
+                $accounts = get_users('exclude=1&orderby=display_name');
+                print_r($settings['belts']);
+                array_walk($accounts, function($account_value, $account_key) use($settings, &$alt) {
+                    $account_info = get_userdata($account_value->ID);
                     $account_name = '';
-                    if (isset($account_info->first_name) && isset($account_info->last_name)) {
+                    if (!empty($account_info->first_name) && !empty($account_info->last_name)) {
                         $account_name = $account_info->first_name . ' ' . $account_info->last_name . ' (' . $account_info->nickname . ')';
                     } else {
-                        $account_name = $account->nickname;
+                        $account_name = $account_info->nickname;
                     }
 
                     $account_programs = '';
-                    $account_programs_array = explode(',', get_user_meta($account->ID, 'ma_accounts_programs', true));
-                    array_walk($account_programs_array, function($program_value, $program_key) use(&$account_programs, $settings) {
+                    $account_programs_array = explode(',', get_user_meta($account_value->ID, 'ma_accounts_programs', true));
+                    foreach ($account_programs_array as $program_key => $program_value) {
                         $account_programs .= $settings['programs'][$program_value]['name'] . ', ';
-                    });
+                    }
                     $account_programs = substr($account_programs, 0, -2);
                     echo (is_int($alt/2)) ? '<tr>' : '<tr class="alt">';
                     ?>
-                        <td class="icon"><a href="plugins.php?page=ma_accounts&id=<?php echo $account->ID ?>&action=update_account#accounts"><span class="ui-icon ui-icon-pencil" style="position: relative; margin: 0 auto;"></span></a></td>
+                        <td class="icon"><a href="plugins.php?page=ma_accounts&id=<?php echo $account_value->ID ?>&action=update_account#accounts"><span class="ui-icon ui-icon-pencil" style="position: relative; margin: 0 auto;"></span></a></td>
                         <td><?php echo $account_name; ?></td>
-                        <td><?php echo (get_user_meta($account->ID, 'ma_accounts_belt', true) === '') ? 'No belt set' : esc_html($settings['belts'][get_user_meta($account->ID, 'ma_accounts_belt', true)]['name']); ?></td>
-                        <td><?php echo (get_user_meta($account->ID, 'ma_accounts_programs', true) === '') ? 'Not enrolled in any programs' : esc_html($account_programs); ?></td>
+                        <td><?php echo (get_user_meta($account_value->ID, 'ma_accounts_belt', true) === '') ? 'No belt set' : esc_html($settings['belts'][get_user_meta($account_value->ID, 'ma_accounts_belt', true)]['name']); ?></td>
+                        <td><?php echo (get_user_meta($account_value->ID, 'ma_accounts_programs', true) === '') ? 'Not enrolled in any programs' : esc_html($account_programs); ?></td>
                     </tr>
                     <?php
                     $alt++;
-                }
+                });
                 ?>
             </tbody>
         </table>
@@ -78,17 +80,17 @@ $settings = get_option('ma_accounts_settings');
             <div id="sortable_trash" style="width: 160px;">
                 <div style="float: left;">
                     <?php
-                    array_walk($settings['belts'], function($belt_value, $belt_key) {
+                    foreach ($settings['belts'] as $belt_key => $belt_value) {
                         echo '<div class="ma_accounts_ul_trash"><a href="plugins.php?page=ma_accounts&id=' . (int) $belt_value['id'] . '&action=delete_belt#belts_programs"><span class="ui-icon ui-icon-trash"></span></a></div>';
-                    });
+                    }
                     ?>
                 </div>
                 <div style="float: right;">
                     <ul id="sortable" class="ma_accounts_ul">
                         <?php
-                        array_walk($settings['belts'], function($belt_value, $belt_key) {
+                        foreach ($settings['belts'] as $belt_key => $belt_value) {
                             echo '<li id="' . (int) $belt_value['id'] . '" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s" style="float: left;"></span>' . esc_html($belt_value['name']) . '</li>';
-                        });
+                        }
                         ?>
                     <ul>
                 </div>
@@ -107,14 +109,14 @@ $settings = get_option('ma_accounts_settings');
             <table>
                 <tbody>
                     <?php
-                    array_walk($settings['programs'], function($program_value, $program_key) {
+                    foreach ($settings['programs'] as $program_key => $program_value) {
                         ?>
                         <tr>
                             <td><a href="plugins.php?page=ma_accounts&id=<?php echo (int) $program_value['id']; ?>&action=delete_program#belts_programs"><span class="ui-icon ui-icon-trash" style="padding: 2px 0;"></span></a></td>
                             <td><?php esc_html_e($program_value['name']); ?></td>
                         </tr>
                         <?php
-                    });
+                    }
                     ?>
                 </tbody>
             </table>
@@ -163,29 +165,22 @@ $settings = get_option('ma_accounts_settings');
     ?>
     <div id="update_account" title="Edit Account">
         <?php
-        $total_users = count_users();
-        $total_users = $total_users['total_users'];
+        $account = get_userdata($id);
 
-        if ($id <= $total_users && $id > 0) {
-            $account = get_userdata($id);
+        if ($account) {
             $name = '';
-            if (isset($account->nickname)) {
-                $name = $account->nickname;
-                if (isset($account->last_name)) {
-                    $name .= ' ' . $account->last_name;
-                }
-            } else if (isset($account->first_name) && isset($account->last_name)) {
-                $name = $account->first_name . ' ' . $account->last_name;
+            if (isset($account->first_name) && isset($account->last_name)) {
+                $name = $account->first_name . ' ' . $account->last_name . ' (' . $account->nickname . ')';
             } else {
-                $name = $account->display_name;
+                $name = $account->nickname;
             }
 
             if (get_user_meta($id, 'ma_accounts_programs', true) !== '') {
                 $programs_array = explode(',', get_user_meta($id, 'ma_accounts_programs', true));
                 $temp = array();
-                array_walk($programs_array, function($program_value, $program_key) use(&$temp) {
+                foreach ($programs_array as $program_key => $program_value) {
                     $temp[$program_value] = $program_value;
-                });
+                }
             }
             $programs_array = $temp;
             unset($temp);
@@ -199,9 +194,9 @@ $settings = get_option('ma_accounts_settings');
                 <span>
                     <select name="ma_accounts_settings[belts]">
                         <?php
-                        array_walk($settings['belts'], function($belt_value, $belt_key) use($id) {
+                        foreach ($settings['belts'] as $belt_key => $belt_value) {
                             echo ($belt_value['id'] == get_user_meta($id, 'ma_accounts_belt', true)) ? '<option value="' . esc_html($belt_value['id']) . '" selected="selected">' . esc_html($belt_value['name']) . '</option>' : '<option value="' . esc_html($belt_value['id']) . '">' . esc_html($belt_value['name']) . '</option>';
-                        });
+                        }
                         ?>
                     </select>
                 </span> <br /><br />
@@ -209,19 +204,21 @@ $settings = get_option('ma_accounts_settings');
                 <table>
                     <tbody>
                         <?php
-                        array_walk($settings['programs'], function($program_value, $program_key) use($programs_array) {
+                        foreach ($settings['programs'] as $program_key => $program_value) {
                             ?>
                             <tr>
                             <td><?php esc_html_e($program_value['name']); ?></td>
                             <td><?php echo (isset($programs_array[$program_value['id']])) ? '<input name="ma_accounts_settings[programs][' . esc_html($program_value['id']) . ']" type="checkbox" value="' . esc_html($program_value['id']) . '" checked="checked" />' : '<input name="ma_accounts_settings[programs][' . esc_html($program_value['id']) . ']" type="checkbox" value="' . esc_html($program_value['id']) . '" />'; ?></td>
                             </tr>
                             <?php
-                        });
+                        }
                         ?>
                     </tbody>
                 </table>
             </form>
             <?php
+        } else {
+            echo 'Invalid user ID.';
         }
         ?>
     </div>
@@ -260,7 +257,7 @@ $settings = get_option('ma_accounts_settings');
     ?>
     <div id="delete_belt" title="Delete Belt" style="text-align: center;">
         <?php
-        if ($id <= count($settings['belts']) && $id > -1 && $_GET['action'] === 'delete_belt') {
+        if (!empty($settings['belts'][$id]) && $_GET['action'] === 'delete_belt') {
             ?>
             Are you sure you want to delete the belt: <br />
             <?php esc_html_e($settings['belts'][$id]['name']); ?>
@@ -270,6 +267,8 @@ $settings = get_option('ma_accounts_settings');
                 <input name="ma_accounts_settings[belt_id]" type="hidden" value="<?php echo $id; ?>" />
             </form>
             <?php
+        } else {
+            echo 'Invalid belt ID.';
         }
         ?>
     </div>
@@ -285,7 +284,7 @@ $settings = get_option('ma_accounts_settings');
     ?>
     <div id="delete_program" title="Delete Program" style="text-align: center;">
         <?php
-        if ($_GET['id'] <= count($settings['programs']) && $_GET['id'] > -1 && $_GET['action'] === 'delete_program') {
+        if (!empty($settings['programs'][$id]) && $_GET['action'] === 'delete_program') {
             ?>
             Are you sure you want to delete the program: <br />
             <?php esc_html_e($settings['programs'][$id]['name']); ?>
@@ -295,6 +294,8 @@ $settings = get_option('ma_accounts_settings');
                 <input name="ma_accounts_settings[program_id]" type="hidden" value="<?php echo $id; ?>" />
             </form>
             <?php
+        } else {
+            echo 'Invalid program ID.';
         }
         ?>
     </div>
