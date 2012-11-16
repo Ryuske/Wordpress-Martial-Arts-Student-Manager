@@ -15,8 +15,8 @@ class ma_accounts_generate_views extends ma_accounts {
     } //End add_admin_menu
 
     private function update_edit_profile() { //Update to object-oriented style (i.e. array(&$this, 'funcName'))
-        add_action('show_user_profile', array('ma_accounts', 'profile_html'));
-        add_action('edit_user_profile', array('ma_accounts', 'edit_profile_html'));
+        add_action('show_user_profile', array(&$this, 'profile_html'));
+        add_action('edit_user_profile', array(&$this, 'edit_profile_html'));
     } //End update_edit_profile
 
     public function render_backend() {

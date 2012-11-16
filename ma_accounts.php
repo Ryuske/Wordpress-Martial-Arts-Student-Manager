@@ -33,11 +33,12 @@ class ma_accounts {
         wp_enqueue_script('jquery-ui-tabs');
         wp_enqueue_script('jquery-ui-dialog');
         wp_enqueue_script('jquery-ui-sortable');
-        wp_register_style('black-tie', plugins_url('application/view/css/jquery-ui.css', __FILE__));
-        wp_register_style('maAccountsStylesheet', plugins_url('application/view/css/ma_accounts.css', __FILE__));
-        wp_register_script('maAccountsScript', plugins_url('application/view/js/admin.js', __FILE__));
+        //Some issue exists in WordPress to where plugins_url($path, basename(__DIR__)) ends up dropping the second parameter. It only seems to accept __FILE__, __DIR__ & dirname()
+        wp_register_style('black-tie', plugins_url(basename(__DIR__) . '/application/view/css/jquery-ui.css'));
+        wp_register_style('maAccountsStylesheet', plugins_url(basename(__DIR__) . '/application/view/css/ma_accounts.css'));
+        wp_register_script('maAccountsScript', plugins_url(basename(__DIR__) . '/application/view/js/admin.js'));
 
-        wp_register_script('jquery-cookie', plugins_url('/application/view/js/jquery-cookie/jquery.cookie.js', __FILE__));
+        wp_register_script('jquery-cookie', plugins_url(basename(__DIR__) . '/application/view/js/jquery-cookie/jquery.cookie.js'));
         wp_enqueue_script('jquery-cookie');
 
         register_activation_hook(__FILE__, array(&$this, 'activate_plugin'));

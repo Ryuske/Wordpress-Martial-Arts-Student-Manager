@@ -1,3 +1,7 @@
+11/15/2012 - Commit 1
+    Fixed issue with plugins_url when WordPress is installed into a subdir
+    Updated Help information on the Help tab
+
 8/25/2012 - Commit 2
     Added wireframing for sorting accounts in backend
     Merged OlderPHP into master; Also removed OlderPHP branch

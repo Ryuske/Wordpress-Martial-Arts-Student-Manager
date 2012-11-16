@@ -33,7 +33,6 @@ $settings = get_option('ma_accounts_settings');
                 <?php
                 $alt = 0;
                 $accounts = get_users('exclude=1&orderby=display_name');
-                print_r($settings['belts']);
                 array_walk($accounts, function($account_value, $account_key) use($settings, &$alt) {
                     $account_info = get_userdata($account_value->ID);
                     $account_name = '';
@@ -149,7 +148,80 @@ $settings = get_option('ma_accounts_settings');
     <!--Help page-->
     <div id="help" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
         <h1>Help</h1>
-        <p>Rank information can only be updated from the options page, though it may be viewed in profile pages as well</p>
+        <p>
+            <h2>Updating account Belt Rank or Program Access</h2>
+            Currently, rank information can only be updated from the options page. However, it can be viewed in Profile pages as well.
+                <ol>
+                    <li>Click the <i>Accounts</i> tab</li>
+                    <li>Locate the account you wish to update</li>
+                    <li>Click the <span class="ui-icon ui-icon-pencil" style="display: inline-block; position: relative; top: 3px;"></span> icon</li>
+                    <li>Enter the desired information in the popup dialog</li>
+                </ol>
+        </p><br />
+        <p>
+            <h2>Adding/Removing Belts &amp; Programs</h2>
+            <h3>Belt Information</h3>
+                Belts are designed on a hierarchical system. Meaning, that someone with a given belt rank also has access to all the ranks below it. <br />
+                <h5 style="line-height: 0;">Adding a Rank:</h5>
+                    <ol>
+                        <li>Go to the <i>Belts &amp; VIP Programs</i> tab</li>
+                        <li>Click the <span class="ui-icon ui-icon-plusthick" style="display: inline-block; position: relative; top: 3px;"></span><b><u>Add</u></b> button next to <b>Belts</b></li>
+                        <li>Fill out the popup dialog, and click <i>Add</i></li>
+                    </ol>
+                <h5 style="line-height: 0; margin-top: 25px;">Removing a Rank:</h5>
+                    <ol>
+                        <li>Go to the <i>Belts &amp; VIP Programs</i> tab</li>
+                        <li>Find the rank you wish to delete</li>
+                        <li>Click the <span class="ui-icon ui-icon-trash" style="display: inline-block; position: relative; top: 3px;"></span> icon</li>
+                        <li>In the dialog that appears, click the <i>Delete</i> button</li>
+                    </ol>
+                <h5 style="line-height: 0; margin-top: 25px;">Re-ordering Ranks:</h5>
+                    <ol>
+                        <li>Go to the <i>Belts &amp; VIP Programs</i> tab</li>
+                        <li>Click &amp; hold the belt rank you wish to re-order</li>
+                        <li>Drag it to where ever you want it</li>
+                        <li>Let go of the mouse</li>
+                    </ol>
+            <h3>Program Information</h3>
+                <h5 style="line-height: 0;">Adding a Program:</h5>
+                    <ol>
+                        <li>Go to the <i>Belts &amp; VIP Programs</i> tab</li>
+                        <li>Click the <span class="ui-icon ui-icon-plusthick" style="display: inline-block; position: relative; top: 3px;"></span><b><u>Add</u></b> button next to <b>VIP Programs</b></li>
+                        <li>Fill out the popup dialog, and click <i>Add</i></li>
+                    </ol>
+                <h5 style="line-height: 0; margin-top: 25px;">Removing a Program:</h5>
+                    <ol>
+                        <li>Go to the <i>Belts &amp; VIP Programs</i> tab</li>
+                        <li>Find the program you wish to delete</li>
+                        <li>Click the <span class="ui-icon ui-icon-trash" style="display: inline-block; position: relative; top: 3px;"></span> icon</li>
+                        <li>In the dialog that appears, click the <i>Delete</i> button</li>
+                    </ol>
+        </p><br />
+        <p>
+            <h2>Settings</h2>
+                Under the <i>Settings</i> tab, there are multiple options. Here is a list of what they mean: <br />
+                <table class="ma_accounts_help_table">
+                    <tbody>
+                        <tr>
+                            <td>Page to display once logged in</td>
+                            <td>This is the <a href="<?php echo admin_url(); ?>edit.php?post_type=page" target="_blank">Page</a> in WordPress that is displayed once someone has logged into WordPress</td>
+                        </tr>
+                        <tr>
+                            <td>Remove Roles</td>
+                            <td>List any existing WordPress roles you would like to remove. For a list of roles,<br />please visit <a href="<?php echo admin_url(); ?>user-new.php" target="_blank">Add User</a> and click the drop down next to <i>Roles</i></td>
+                        </tr>
+                        <tr>
+                            <td>Add Roles</td>
+                            <td>These are roles you would like to add to WordPress</td>
+                        </tr>
+                        <tr>
+                            <td>Default Role</td>
+                            <td>This is the default role a user will recieve when creating new accounts</td>
+                        </tr>
+                    <tbody>
+                </table>
+                If you would like more information about what a role is, please visit: <a href="http://codex.wordpress.org/Roles_and_Capabilities" target="_blank">Roles and Capabilities &laquo; WordPress Codex</a>
+        </p>
         <p>Our options name is "ma_accounts_settings". If you're not sure what this mean, please ignore it.</p>
         <p>Check us out on GitHub to track the latest updates and releases: <a href="https://github.com/Ryuske/Wordpress-Martial-Arts-Student-Manager" target="_blank">https://github.com/Ryuske/Wordpress-Martial-Arts-Student-Manager</a>
     </div>
