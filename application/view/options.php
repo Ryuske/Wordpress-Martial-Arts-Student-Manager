@@ -130,16 +130,16 @@ $settings = get_option('ma_accounts_settings');
         <form id="update_settings" name="update_settings" action="options.php#settings" method="post">
             <?php settings_fields('ma_accounts_settings'); ?>
             <label>Page to display once logged in</label> <br />
-            <input name="ma_accounts_settings[login_page]" type="text" value="<?php esc_html_e($settings['login_page']); ?>" /> <br /><br />
+            <input name="ma_accounts_settings[login_page]" type="text" value="<?php if (!empty($settings['login'])) { esc_html_e($settings['login_page']); } ?>" /> <br /><br />
 
             <label>Remove Roles (separate with a comma)</label> <br />
-            <input style="width: 400px;" name="ma_accounts_settings[roles][remove]" type="text" value="<?php esc_html_e(implode(', ', $settings['roles']['remove'])); ?>" /> <br /><br />
+            <input style="width: 400px;" name="ma_accounts_settings[roles][remove]" type="text" value="<?php if (!empty($settings['roles']['remove'])) { esc_html_e(implode(', ', $settings['roles']['remove'])); } ?>" /> <br /><br />
 
             <label>Add Roles (separate with a comma, currently available: student, promoter)</label> <br />
-            <input name="ma_accounts_settings[roles][add]" type="text" value="<?php esc_html_e(implode(', ', $settings['roles']['add'])); ?>" /> <br /><br />
+            <input name="ma_accounts_settings[roles][add]" type="text" value="<?php if (!empty($settings['roles']['add'])) { esc_html_e(implode(', ', $settings['roles']['add'])); } ?>" /> <br /><br />
 
             <label>Default Role</label> <br />
-            <input name="ma_accounts_settings[roles][default]" type="text" value="<?php esc_html_e($settings['roles']['default']); ?>" /> <br /><br />
+            <input name="ma_accounts_settings[roles][default]" type="text" value="<?php if (!empty($settings['roles']['default'])) { esc_html_e($settings['roles']['default']); } ?>" /> <br /><br />
 
             <input class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" type="submit" value="Save Changes" />
         </form>

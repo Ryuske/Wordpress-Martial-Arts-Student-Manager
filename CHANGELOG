@@ -1,3 +1,6 @@
+11/18/2012 - Commit 1
+    Fixed an issue in /application/view/options.php when certain $settings['roles'] were empty. HTML would break.
+
 11/15/2012 - Commit 1
     Fixed issue with plugins_url when WordPress is installed into a subdir
     Updated Help information on the Help tab
