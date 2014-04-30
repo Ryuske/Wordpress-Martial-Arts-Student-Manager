@@ -8,9 +8,10 @@ var ma_accounts = {'sortable_original_order': null, 'ul_order': Array()};
  */
 jQuery(document).ready(function(){
     jQuery('#option-tabs').tabs();
-    jQuery("#option-tabs").bind("tabsshow", function(event, ui) { 
+    /*jQuery("#option-tabs").bind("tabsshow", function(event, ui) {
+        console.log('uhm');
         window.location.hash = ui.tab.hash;
-    })
+    })*/
 
     jQuery('td').each(function(index) {
         if (jQuery(this).text() == "No belt set") {
@@ -128,8 +129,6 @@ jQuery('#delete_belt').dialog({
 jQuery('#delete_program').dialog({
         autoOpen: false,
         position: ['center', 100],
-        height: 140,
-        modal: true,
         resizable: false,
         buttons: {
             Delete: function() {

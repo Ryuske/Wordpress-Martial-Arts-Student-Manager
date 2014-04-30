@@ -3,21 +3,21 @@ $settings = get_option('ma_accounts_settings');
 ?>
 <div id="option-tabs" style="clear:both; margin-right:20px;" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
     <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
-        <li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active">
+        <li class="ui-state-default ui-corner-top ui-tabs-selected">
             <a href="#accounts">
-                <span class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-power" style="float: left; margin-right: .3em;"></span></span>
+                <span class="ui-icon ui-icon-power" style="float: left; margin-right: .3em;"></span>
                 Accounts
             </a>
         </li>
-        <li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active">
+        <li class="ui-state-default ui-corner-top ui-tabs-selected">
             <a href="#belts_programs">
-                <span class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-script" style="float: left; margin-right: .3em;"></span></span>
+                <span class="ui-icon ui-icon-script" style="float: left; margin-right: .3em;"></span>
                 Belts &amp; VIP Programs
             </a>
         </li>
         <li class="ui-state-default ui-corner-top">
             <a href="#settings">
-                <span class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-gear" style="float: left; margin-right: .3em;"></span></span>
+                <span class="ui-icon ui-icon-gear" style="float: left; margin-right: .3em;"></span>
                 Settings
             </a>
         </li>
@@ -26,7 +26,8 @@ $settings = get_option('ma_accounts_settings');
     <!--End Navigation-->
 
     <!--Accounts page-->
-    <div id="accounts" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
+
+    <div id="accounts" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
         <h1>Accounts</h1>
         <table class="ma_accounts_table">
             <tbody>
@@ -44,9 +45,13 @@ $settings = get_option('ma_accounts_settings');
 
                     $account_programs = '';
                     $account_programs_array = explode(',', get_user_meta($account_value->ID, 'ma_accounts_programs', true));
-                    foreach ($account_programs_array as $program_key => $program_value) {
-                        $account_programs .= $settings['programs'][$program_value]['name'] . ', ';
+                    
+                    if (array_key_exists('programs', $settings)) {
+                        foreach ($account_programs_array as $program_key => $program_value) {
+                            $account_programs .= $settings['programs'][$program_value]['name'] . ', ';
+                        }
                     }
+                    
                     $account_programs = substr($account_programs, 0, -2);
                     echo (is_int($alt/2)) ? '<tr>' : '<tr class="alt">';
                     ?>
@@ -64,7 +69,7 @@ $settings = get_option('ma_accounts_settings');
     </div>
 
     <!--Belts and Programs page-->
-    <div id="belts_programs" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
+    <div id="belts_programs" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
         <h1>Belts &amp; VIP Programs</h1>
         <h3 style="display: inline;">Belts</h3> <h5 style="display: inline; position: relative; bottom: 1px;"><a href="#belts_programs" onclick="jQuery('#add_belt').dialog('open')"><span class="ui-icon ui-icon-plusthick" style="display: inline-block; vertical-align: top;"></span>Add</a></h5>
         <?php
@@ -125,7 +130,7 @@ $settings = get_option('ma_accounts_settings');
     </div>
 
     <!--Settings page-->
-    <div id="settings" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
+    <div id="settings" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
         <h1>Settings</h1>
         <form id="update_settings" name="update_settings" action="options.php#settings" method="post">
             <?php settings_fields('ma_accounts_settings'); ?>
@@ -146,7 +151,7 @@ $settings = get_option('ma_accounts_settings');
     </div>
 
     <!--Help page-->
-    <div id="help" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
+    <div id="help" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
         <h1>Help</h1>
         <p>
             <h2>Updating account Belt Rank or Program Access</h2>
